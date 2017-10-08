@@ -61,27 +61,22 @@ endif(PythonQt_Qt5)
 # The variable "generated_cpp_suffix" allows to conditionnally compile the generated wrappers
 # associated with the Qt version being used.
 
-set(generated_cpp_suffix "_${QT_VERSION_MAJOR}${QT_VERSION_MINOR}")
-if("${generated_cpp_suffix}" STREQUAL "_58")
-	set(generated_cpp_suffix "_56") # Also use 5.6 wrappers for 5.8
-endif()
-if("${generated_cpp_suffix}" STREQUAL "_57")
-	set(generated_cpp_suffix "_56") # Also use 5.6 wrappers for 5.7
-endif()
-if("${generated_cpp_suffix}" STREQUAL "_55")
-	set(generated_cpp_suffix "_54") # Also use 5.4 wrappers for 5.5
-endif()
-if("${generated_cpp_suffix}" STREQUAL "_51" OR "${generated_cpp_suffix}" STREQUAL "_52")
-	set(generated_cpp_suffix "_50") # Also use 5.0 wrappers for 5.1.x and 5.2.x version
-endif()
-if("${generated_cpp_suffix}" STREQUAL "_46")
-	set(generated_cpp_suffix "_47") # Also use 4.7 wrappers for 4.6.x version
+set(generated_cpp_suffix "${QT_VERSION_MAJOR}${QT_VERSION_MINOR}")
+if("${generated_cpp_suffix}" GREATER_EQUAL "56")
+	set(generated_cpp_suffix "56") # Also use 5.6 wrappers for 5.7 and ongoing
+elseif("${generated_cpp_suffix}" GREATER_EQUAL "54")
+	set(generated_cpp_suffix "54") # Also use 5.4 wrappers for 5.5
+elseif("${generated_cpp_suffix}" GREATER_EQUAL "50")
+	set(generated_cpp_suffix "50") # Also use 5.0 wrappers for 5.1.x and 5.2.x version
+elseif("${generated_cpp_suffix}" LESS_EQUAL "47")
+	set(generated_cpp_suffix "47") # Also use 4.7 wrappers for 4.6.x version
 endif()
 
 set(WEBKIT_AVAILABLE ON)
-if("${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}" VERSION_GREATER "5.6" OR QT_STATIC)
+if("${generated_cpp_suffix}" GREATER_EQUAL "56" OR QT_STATIC)
 	set(WEBKIT_AVAILABLE OFF)
 endif()
+set(generated_cpp_suffix "_${generated_cpp_suffix}") # prepend _
 include(CMakeDependentOption)
 CMAKE_DEPENDENT_OPTION(PYTHONQT_WITH_WEBKIT "include QtWebKit wrappers" ON "WEBKIT_AVAILABLE" OFF)
 
@@ -168,4 +163,4 @@ endif()
 if(${PythonQtAll})
 	set(WrapAll " + ${PythonQt_QtAll}")
 endif()
-message(STATUS "Building ${PythonQt}${WrapAll} (${QT_LINK_TYPE} Qt ${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH} + Python ${PYTHONLIBS_VERSION_STRING} | ${CMAKE_BUILD_TYPE} | ${LINK_TYPE})")
+message(STATUS "Building ${PythonQt}${WrapAll} (${QT_LINK_TYPE} Qt ${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH} (using ${generated_cpp_suffix} wrappers) + Python ${PYTHONLIBS_VERSION_STRING} | ${CMAKE_BUILD_TYPE} | ${LINK_TYPE})")
