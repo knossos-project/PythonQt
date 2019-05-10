@@ -59,6 +59,7 @@
 #include <QDir>
 
 #include <pydebug.h>
+#include <string>
 #include <vector>
 
 PythonQt* PythonQt::_self = NULL;
@@ -794,10 +795,20 @@ bool PythonQt::addSignalHandler(QObject* obj, const char* signal, PyObject* modu
 
 bool PythonQt::addSignalHandler(QObject* obj, const char* signal, PyObject* receiver)
 {
+  return addSignalHandler(obj, signal, nullptr, receiver);
+}
+
+bool PythonQt::addSignalHandler(QObject* obj, const char* signal, QObject* rcvobj, PyObject* receiver)
+{
   bool flag = false;
   PythonQtSignalReceiver* r = getSignalReceiver(obj);
   if (r) {
     flag = r->addSignalHandler(signal, receiver);
+    if (rcvobj != nullptr) {
+      QObject::connect(rcvobj, &QObject::destroyed, [=, signalStr = std::string{signal}]{// the signal ptr is not persistent
+        removeSignalHandler(obj, signalStr.c_str(), receiver);
+      });
+    }
   }
   return flag;
 }

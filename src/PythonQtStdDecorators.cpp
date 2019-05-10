@@ -48,6 +48,11 @@
 
 bool PythonQtStdDecorators::connect(QObject* sender, const QString& signal, PyObject* callable)
 {
+  return connect(sender, signal, nullptr, callable);
+}
+
+bool PythonQtStdDecorators::connect(QObject* sender, const QString& signal, QObject* receiver, PyObject* callable)
+{
   bool result = false;
   QByteArray signalTmp = signal.toLatin1();
   char first = signalTmp.at(0);
@@ -56,7 +61,7 @@ bool PythonQtStdDecorators::connect(QObject* sender, const QString& signal, PyOb
   }
 
   if (sender) {
-    result = PythonQt::self()->addSignalHandler(sender, signalTmp, callable);
+    result = PythonQt::self()->addSignalHandler(sender, signalTmp, receiver, callable);
     if (!result) {
       if (sender->metaObject()->indexOfSignal(QMetaObject::normalizedSignature(signalTmp.constData()+1)) == -1) {
         qWarning("PythonQt: QObject::connect() signal '%s' does not exist on %s", signal.toLatin1().constData(), sender->metaObject()->className());
