@@ -131,6 +131,7 @@ private:
   QObject* _obj;
   PythonQtClassInfo* _objClassInfo;
   int _slotCount;
+public:
   int _destroyedSignalCount;
   // linear list may get slow on multiple targets, but I think typically we have many objects and just a few signals
   QList<PythonQtSignalTarget> _targets;

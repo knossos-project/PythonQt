@@ -804,9 +804,22 @@ bool PythonQt::addSignalHandler(QObject* obj, const char* signal, QObject* rcvob
   PythonQtSignalReceiver* r = getSignalReceiver(obj);
   if (r) {
     flag = r->addSignalHandler(signal, receiver);
-    if (rcvobj != nullptr) {
-      QObject::connect(rcvobj, &QObject::destroyed, [=, signalStr = std::string{signal}]{// the signal ptr is not persistent
-        removeSignalHandler(obj, signalStr.c_str(), receiver);
+    if (flag && rcvobj != nullptr && rcvobj != obj) {
+//    if (rcvobj != nullptr) {
+        auto conn = QObject::connect(rcvobj, &QObject::destroyed, [=, signalStr = std::string{signal}]{// the signal ptr is not persistent
+          qDebug() << rcvobj << obj;
+          if (auto it = _p->_signalReceivers.find(obj); it != std::end(_p->_signalReceivers) && *it == r) {
+            qDebug() << *it << r << r->removeSignalHandler(signalStr.c_str(), receiver);
+          }
+        });
+        QObject::connect(rcvobj, &QObject::destroyed, [=, signalStr = std::string{signal}](){
+          qDebug() << "rcvobj" << QObject::disconnect(conn) << conn << rcvobj << signalStr.c_str();
+        });
+        QObject::connect(obj, &QObject::destroyed, [=, signalStr = std::string{signal}](){
+          qDebug() << "vobj" << QObject::disconnect(conn) << conn << obj << signalStr.c_str();
+        });
+      QObject::connect(r, &QObject::destroyed, [=](){
+        qDebug() << QObject::disconnect(conn);
       });
     }
   }
@@ -831,6 +844,10 @@ bool PythonQt::removeSignalHandler(QObject* obj, const char* signal, PyObject* m
 bool PythonQt::removeSignalHandler(QObject* obj, const char* signal, PyObject* receiver)
 {
   bool flag = false;
+//  auto r = _p->_signalReceivers.find(obj);
+//  if (r != std::end(_p->_signalReceivers)) {
+//    flag = r.value()->removeSignalHandler(signal, receiver);
+//  }
   PythonQtSignalReceiver* r = _p->_signalReceivers[obj];
   if (r) {
     flag = r->removeSignalHandler(signal, receiver);

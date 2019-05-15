@@ -778,7 +778,7 @@ private:
 
   //! lazy classes that cause PythonQt to trigger an import if they are encountered.
   QHash<QByteArray, QByteArray> _knownLazyClasses;
-
+public:
   //! stores signal receivers for QObjects
   QHash<QObject* , PythonQtSignalReceiver *> _signalReceivers;
 

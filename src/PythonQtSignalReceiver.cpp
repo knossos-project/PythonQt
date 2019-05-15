@@ -206,6 +206,7 @@ bool PythonQtSignalReceiver::addSignalHandler(const char* signal, PyObject* call
 
 bool PythonQtSignalReceiver::removeSignalHandler(const char* signal, PyObject* callable)
 {
+  qDebug() << "removeSignalHandler" << signal << callable;
   int foundCount = 0;
   int sigId = getSignalIndex(signal);
   if (sigId>=0) {
@@ -213,6 +214,7 @@ bool PythonQtSignalReceiver::removeSignalHandler(const char* signal, PyObject* c
     if (callable) {
       while (i.hasNext()) {
         if (i.next().isSame(sigId, callable)) {
+          qDebug() << "removing" << signal << callable;
           QMetaObject::disconnect(_obj, sigId, this, i.value().slotId());
           i.remove();
           foundCount++;
@@ -233,6 +235,7 @@ bool PythonQtSignalReceiver::removeSignalHandler(const char* signal, PyObject* c
     _destroyedSignalCount -= foundCount;
     if (_destroyedSignalCount==0) {
       // make ourself child of QObject again, to get deleted when the object gets deleted
+      qDebug() << "reparent";
       this->setParent(_obj);
     }
   }
