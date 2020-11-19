@@ -1,4 +1,5 @@
-project(PythonQt_Core)
+cmake_minimum_required(VERSION 3.15)
+project(PythonQt_Core CXX)
 
 file(GLOB_RECURSE SOURCES#compile gui subfolder
 	./*.cpp

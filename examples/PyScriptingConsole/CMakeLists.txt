@@ -1,4 +1,5 @@
-project(PyScriptingConsole)
+cmake_minimum_required(VERSION 3.15)
+project(PyScriptingConsole CXX)
 
 file(GLOB SOURCES *.cpp)
 file(GLOB HEADERS *.h)
