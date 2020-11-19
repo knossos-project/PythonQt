@@ -1,4 +1,5 @@
-project(PythonQt_Tests)
+cmake_minimum_required(VERSION 3.15)
+project(PythonQt_Tests CXX)
 
 # automatically link plugins when linking to a static qt
 # so far only of effect in msys2
