@@ -2116,10 +2116,13 @@ bool PythonQtPrivate::isMethodDescriptor(PyObject* object) const
 }
 
 // We need this for the dynamic meta object building:
+#ifdef DYNAMIC_META_OBJECT_IMPLEMENTATION
 #include <private/qmetaobjectbuilder_p.h>
+#endif// DYNAMIC_META_OBJECT_IMPLEMENTATION
 
 const QMetaObject* PythonQtPrivate::getDynamicMetaObject(PythonQtInstanceWrapper* wrapper, const QMetaObject* prototypeMetaObject)
 {
+#ifdef DYNAMIC_META_OBJECT_IMPLEMENTATION
   PYTHONQT_GIL_SCOPE;
   PythonQtDynamicClassInfo* info = wrapper->dynamicClassInfo();
   if (info) {
@@ -2128,9 +2131,11 @@ const QMetaObject* PythonQtPrivate::getDynamicMetaObject(PythonQtInstanceWrapper
     }
     return info->_dynamicMetaObject;
   }
+#endif// DYNAMIC_META_OBJECT_IMPLEMENTATION
   return prototypeMetaObject;
 }
 
+#ifdef DYNAMIC_META_OBJECT_IMPLEMENTATION
 const QMetaObject* PythonQtPrivate::setupDynamicMetaObjectChain(PythonQtClassWrapper* type, const QMetaObject* prototypeMetaObject)
 {
   if (!type->_dynamicClassInfo->_dynamicMetaObject) {
@@ -2239,7 +2244,7 @@ const QMetaObject* PythonQtPrivate::buildDynamicMetaObject(PythonQtClassWrapper*
   }
   return type->_dynamicClassInfo->_dynamicMetaObject;
 }
-
+#endif// DYNAMIC_META_OBJECT_IMPLEMENTATION
 
 int PythonQtPrivate::handleMetaCall(QObject* object, PythonQtInstanceWrapper* wrapper, QMetaObject::Call call, int id, void** args)
 {
