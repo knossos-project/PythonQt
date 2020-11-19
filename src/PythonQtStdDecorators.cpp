@@ -48,6 +48,11 @@
 
 bool PythonQtStdDecorators::connect(QObject* sender, const QByteArray& signal, PyObject* callable)
 {
+  return connect(sender, signal, nullptr, callable);
+}
+
+bool PythonQtStdDecorators::connect(QObject* sender, const QByteArray& signal, QObject* receiver, PyObject* callable)
+{
   if (signal.size() == 0) {
     std::cerr << "PythonQt: QObject::disconnect() signal is empty." << std::endl;
     return false;
@@ -60,7 +65,7 @@ bool PythonQtStdDecorators::connect(QObject* sender, const QByteArray& signal, P
   }
 
   if (sender) {
-    result = PythonQt::self()->addSignalHandler(sender, signalTmp, callable);
+    result = PythonQt::self()->addSignalHandler(sender, signalTmp, receiver, callable);
     if (!result) {
       if (sender->metaObject()->indexOfSignal(QMetaObject::normalizedSignature(signalTmp.constData()+1)) == -1) {
         std::cerr << "PythonQt: QObject::connect() signal '" << signal.constData() << "' does not exist on " << sender->metaObject()->className() << std::endl;
