@@ -1,0 +1,17 @@
+# - Config file for the PythonQt package
+# It defines the following variables
+#  PythonQt              - the PythonQt core target (QtXPythonYZ)
+
+set(PythonQt @PythonQt@)#library name
+set(PythonQt_Qt5 @PythonQt_Qt5@)#flag
+set(PythonQt_Python3 @PythonQt_Python3@)#flag
+set(PythonQt_Python @PYTHONLIBS_VERSION_STRING@)#linked python version
+
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets)
+find_package(PythonLibs @PYTHONLIBS_VERSION_STRING@ REQUIRED)
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+include("${CMAKE_CURRENT_LIST_DIR}/@PythonQt@Targets.cmake")
+set_target_properties(${PythonQt} PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES ${PYTHON_INCLUDE_DIRS}#emulate IMPORTED target for Python
+)
