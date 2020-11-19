@@ -1,4 +1,5 @@
-project(PythonQt_QtAll)
+cmake_minimum_required(VERSION 3.15)
+project(PythonQt_QtAll CXX)
 
 file(GLOB SOURCES *.cpp)
 file(GLOB HEADERS *.h)
