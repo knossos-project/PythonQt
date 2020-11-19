@@ -387,6 +387,9 @@ public:
   //! add a signal handler to the given \c signal of \c obj  and connect it to a callable \c receiver
   bool addSignalHandler(QObject* obj, const char* signal, PyObject* receiver);
 
+  //! add a signal handler to the given \c signal of \c obj, co-ownership to \c rcvobj, and connect it to a callable \c receiver
+  bool addSignalHandler(QObject* obj, const char* signal, QObject* rcvobj, PyObject* receiver);
+
   //! remove a signal handler from the given \c signal of \c obj
   bool removeSignalHandler(QObject* obj, const char* signal, PyObject* receiver);
 

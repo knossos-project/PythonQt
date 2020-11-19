@@ -259,7 +259,13 @@ static PyObject *PythonQtSignalFunction_connect(PythonQtSignalFunctionObject* ty
       if (argc==1) {
         // connect with Python callable
         PyObject* callable = PyTuple_GET_ITEM(args, 0);
-        bool result = PythonQt::self()->addSignalHandler(self->_obj, QByteArray("2") + type->m_ml->signature(), callable);
+        bool result;
+        if (PyMethod_Check(callable) && PyObject_TypeCheck(PyMethod_Self(callable), &PythonQtInstanceWrapper_Type)) {
+            auto * rcvobj = reinterpret_cast<PythonQtInstanceWrapper*>(PyMethod_Self(callable))->_obj.data();
+            result = PythonQt::self()->addSignalHandler(self->_obj, QByteArray("2") + type->m_ml->signature(), rcvobj, callable);
+        } else {
+            result = PythonQt::self()->addSignalHandler(self->_obj, QByteArray("2") + type->m_ml->signature(), callable);
+        }
         return PythonQtConv::GetPyBool(result);
       } else {
         PyErr_SetString(PyExc_ValueError, "Called connect with wrong number of arguments");
