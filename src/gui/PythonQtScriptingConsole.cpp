@@ -85,7 +85,6 @@ void PythonQtScriptingConsole::stdOut(const QString& s)
   int idx;
   while ((idx = _stdOut.indexOf('\n'))!=-1) {
     consoleMessage(_stdOut.left(idx));
-    std::cout << QStringToPythonConstCharPointer(_stdOut.left(idx)) << std::endl;
     _stdOut = _stdOut.mid(idx+1);
   }
 }
@@ -97,7 +96,6 @@ void PythonQtScriptingConsole::stdErr(const QString& s)
   int idx;
   while ((idx = _stdErr.indexOf('\n'))!=-1) {
     consoleMessage(_stdErr.left(idx));
-    std::cerr << QStringToPythonConstCharPointer(_stdErr.left(idx)) << std::endl;
     _stdErr = _stdErr.mid(idx+1);
   }
 }
