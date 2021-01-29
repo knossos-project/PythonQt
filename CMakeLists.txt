@@ -50,19 +50,18 @@ endif()
 
 #-----------------------------------------------------------------------------
 # Qt
-option(PythonQt_Qt5 "Use Qt 5.x" ON)
-if(PythonQt_Qt5)
-	include(PythonQt_Qt_5x)
-else(PythonQt_Qt5)
-	include(PythonQt_Qt_4x)
-endif(PythonQt_Qt5)
+include(PythonQt_Qt_6x)
 
 #-----------------------------------------------------------------------------
 # The variable "generated_cpp_suffix" allows to conditionnally compile the generated wrappers
 # associated with the Qt version being used.
 
 set(generated_cpp_suffix "${QT_VERSION_MAJOR}${QT_VERSION_MINOR}")
-if("${generated_cpp_suffix}" GREATER_EQUAL "511")
+if("${generated_cpp_suffix}" GREATER_EQUAL "60")
+	set(generated_cpp_suffix "60")
+elseif("${generated_cpp_suffix}" GREATER_EQUAL "515")
+	set(generated_cpp_suffix "515")
+elseif("${generated_cpp_suffix}" GREATER_EQUAL "511")
 	set(generated_cpp_suffix "511")
 elseif("${generated_cpp_suffix}" GREATER_EQUAL "56")
 	set(generated_cpp_suffix "56") # Also use 5.6 wrappers for 5.7 and ongoing
