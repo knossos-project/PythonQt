@@ -33,7 +33,7 @@ endif()
 target_link_libraries(${PythonQt} ${PYTHON_LIBRARIES})
 target_include_directories(${PythonQt} PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-	$<INSTALL_INTERFACE:include>
+	$<INSTALL_INTERFACE:include/${PythonQt}>
 )
 qt_use_modules(${PythonQt} Core Gui)
 if(PythonQt_Qt5)
