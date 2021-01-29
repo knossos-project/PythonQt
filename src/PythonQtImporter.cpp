@@ -646,7 +646,7 @@ PythonQtImport::unmarshalCode(const QString& path, const QByteArray& data, time_
 
 #ifdef PY3K
   // Python 3 also stores the size of the *.py file, but we ignore it for now
-  int sourceSize = getLong((unsigned char *)buf + 8); 
+  int sourceSize = getLong((unsigned char *)buf + 8);
   Q_UNUSED(sourceSize);
   // read the module
   code = PyMarshal_ReadObjectFromString(buf + 12, size - 12);
@@ -739,7 +739,7 @@ PythonQtImport::getCodeFromData(const QString& path, int isbytecode,int /*ispack
       QDateTime time;
       time = PythonQt::importInterface()->lastModifiedDate(path);
       QString cacheFilename =  getCacheFilename(path, /*isOptimizedFilename=*/false);
-      writeCompiledModule((PyCodeObject*)code, cacheFilename, time.toTime_t(), /*sourceSize=*/qdata.length());
+      writeCompiledModule((PyCodeObject*)code, cacheFilename, time.toSecsSinceEpoch(), /*sourceSize=*/qdata.length());
     }
   }
   return code;
@@ -753,7 +753,7 @@ PythonQtImport::getMTimeOfSource(const QString& path)
   if (PythonQt::importInterface()->exists(path2)) {
     QDateTime t = PythonQt::importInterface()->lastModifiedDate(path2);
     if (t.isValid()) {
-      mtime = t.toTime_t();
+      mtime = t.toSecsSinceEpoch();
     }
   }
 

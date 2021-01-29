@@ -43,6 +43,8 @@
 #include "PythonQtClassInfo.h"
 #include <iostream>
 
+#include <QRegExp>
+
 QHash<QByteArray, PythonQtMethodInfo*> PythonQtMethodInfo::_cachedSignatures;
 QHash<int, PythonQtMethodInfo::ParameterInfo> PythonQtMethodInfo::_cachedParameterInfos;
 QHash<QByteArray, QByteArray> PythonQtMethodInfo::_parameterNameAliases;
@@ -372,7 +374,7 @@ int PythonQtMethodInfo::nameToType(const char* name)
     _parameterTypeDict.insert("QLineF", QMetaType::QLineF);
     _parameterTypeDict.insert("QPoint", QMetaType::QPoint);
     _parameterTypeDict.insert("QPointF", QMetaType::QPointF);
-    _parameterTypeDict.insert("QRegExp", QMetaType::QRegExp);
+//    _parameterTypeDict.insert("QRegExp", QMetaType::QRegExp);
     _parameterTypeDict.insert("QFont", QMetaType::QFont);
     _parameterTypeDict.insert("QPixmap", QMetaType::QPixmap);
     _parameterTypeDict.insert("QBrush", QMetaType::QBrush);
@@ -388,7 +390,7 @@ int PythonQtMethodInfo::nameToType(const char* name)
     _parameterTypeDict.insert("QPen", QMetaType::QPen);
     _parameterTypeDict.insert("QTextLength", QMetaType::QTextLength);
     _parameterTypeDict.insert("QTextFormat", QMetaType::QTextFormat);
-    _parameterTypeDict.insert("QMatrix", QMetaType::QMatrix);
+    //_parameterTypeDict.insert("QMatrix", QMetaType::QMatrix);
     _parameterTypeDict.insert("QVariant", PythonQtMethodInfo::Variant);
     // own special types... (none so far, could be e.g. ObjectList
   }
@@ -441,7 +443,7 @@ void PythonQtSlotInfo::deleteOverloadsAndThis()
 
 
 QString PythonQtSlotInfo::fullSignature(bool skipReturnValue, int optionalArgsIndex) const
-{ 
+{
   int firstArgOffset = isInstanceDecorator()?2:1;
   QString result;
   QByteArray sig = slotName();
@@ -507,13 +509,13 @@ QString PythonQtSlotInfo::fullSignature(bool skipReturnValue, int optionalArgsIn
 
   if (isStatic) {
     result = QString("static ") + result;
-  } 
+  }
   if (isConstructor) {
 //    result = QString("constructor ") + result;
-  } 
+  }
   if (isDestructor) {
     result = QString("~") + result;
-  } 
+  }
 
   if (!skipReturnValue) {
     if (!_parameters.at(0).name.isEmpty()) {
@@ -531,7 +533,7 @@ QByteArray PythonQtSlotInfo::slotName(bool removeDecorators) const
   if (removeDecorators) {
     if (name.startsWith("py_q_")) {
       name = name.mid(5);
-    } else 
+    } else
     if (name.startsWith("static_")) {
       name = name.mid(7);
       int idx = name.indexOf("_");

@@ -52,6 +52,7 @@
 #include <QColor>
 #include <QDateTime>
 #include <QDate>
+#include <QRegExp>
 #include <QTime>
 #include <QTimer>
 #include <QImage>
@@ -104,8 +105,8 @@ public Q_SLOTS:
   int static_Qt_qRound(double a) { return qRound(a); }
   qint64 static_Qt_qRound64(double a) { return qRound64(a); }
   const char* static_Qt_qVersion() { return qVersion(); }
-  int static_Qt_qrand() { return qrand(); }
-  void static_Qt_qsrand(uint a) { qsrand(a); }
+//  int static_Qt_qrand() { return qrand(); }
+//  void static_Qt_qsrand(uint a) { qsrand(a); }
 
   QString tr(QObject* obj, const QString& text, const QString& ambig = QString(), int n = -1);
 

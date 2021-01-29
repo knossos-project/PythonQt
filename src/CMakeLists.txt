@@ -39,6 +39,7 @@ qt_use_modules(${PythonQt} Core Gui)
 if(PythonQt_Qt5)
 	qt_use_modules(${PythonQt} Widgets)
 endif()
+qt_use_modules(${PythonQt} Core5Compat)
 
 if(BUILD_SHARED_LIBS)
 	target_compile_definitions(${PythonQt} PRIVATE PYTHONQT_EXPORTS)
@@ -73,3 +74,9 @@ install(EXPORT ${PythonQt}Targets DESTINATION ${LIB_CMAKE_PATH} COMPONENT core-d
 install(FILES ${PROJECT_BINARY_DIR}/${PythonQt}Config.cmake
 	          ${PROJECT_BINARY_DIR}/${PythonQt}ConfigVersion.cmake
 	DESTINATION ${LIB_CMAKE_PATH} COMPONENT core-dev)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(${PythonQt} PRIVATE "-fcolor-diagnostics")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(${PythonQt} PRIVATE "-fdiagnostics-color=always")
+endif()

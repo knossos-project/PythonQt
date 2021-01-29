@@ -466,8 +466,10 @@ static PyObject *PythonQtClassWrapper_getattro(PyObject *obj, PyObject *name)
     }
     PyObject* dict = PyDict_New();
       
-    QSet<QString> completeSet = QSet<QString>::fromList(wrapper->classInfo()->memberList());
-    completeSet.unite(QSet<QString>::fromList(wrapper->classInfo()->propertyList()));
+    const auto & memberList = wrapper->classInfo()->memberList();
+    const auto & propertyList = wrapper->classInfo()->propertyList();
+    QSet<QString> completeSet = QSet<QString>(std::begin(memberList), std::end(memberList));
+    completeSet.unite(QSet<QString>(std::begin(propertyList), std::end(propertyList)));
 
     Q_FOREACH (QString name, completeSet) {
       if (name.startsWith("py_")) {

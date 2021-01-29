@@ -72,7 +72,7 @@
 #include <QPen>
 #include <QTextLength>
 #include <QTextFormat>
-#include <QMatrix>
+//#include <QMatrix>
 
 #endif
 

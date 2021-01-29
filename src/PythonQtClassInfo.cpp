@@ -71,7 +71,7 @@ PythonQtClassInfo::PythonQtClassInfo() {
 PythonQtClassInfo::~PythonQtClassInfo()
 {
   clearCachedMembers();
-  
+
   if (_constructors) {
     _constructors->deleteOverloadsAndThis();
   }
@@ -125,11 +125,11 @@ int PythonQtClassInfo::findCharOffset(const char* sigStart, char someChar)
   } while (c!=someChar && c!=0);
   return sigEnd-sigStart-1;
 }
-          
+
 bool PythonQtClassInfo::lookForPropertyAndCache(const char* memberName)
 {
   if (!_meta) return false;
-  
+
   bool found = false;
   bool nameMapped = false;
   const char* attributeName = memberName;
@@ -185,7 +185,7 @@ PythonQtSlotInfo* PythonQtClassInfo::findDecoratorSlotsFromDecoratorProvider(con
       QMetaMethod m = meta->method(i);
       if ((m.methodType() == QMetaMethod::Method ||
            m.methodType() == QMetaMethod::Slot) && m.access() == QMetaMethod::Public) {
-        
+
         QByteArray signature = PythonQtUtils::methodName(m);
         bool isClassDeco = false;
         if (signature.startsWith("static_")) {
@@ -198,7 +198,7 @@ PythonQtSlotInfo* PythonQtClassInfo::findDecoratorSlotsFromDecoratorProvider(con
           isClassDeco = true;
         }
         // XXX no checking is currently done if the slots have correct first argument or not...
-        
+
         // check if same length and same name
         if (signature == memberName) {
           found = true;
@@ -257,12 +257,12 @@ bool PythonQtClassInfo::lookForMethodAndCache(const char* memberName)
 {
   bool found = false;
   PythonQtSlotInfo* tail = NULL;
-  
+
   // look for dynamic decorators in this class and in derived classes
   // (do this first to allow overloading of existing slots with generated wrappers,
   //  e.g. QDialog::accept is overloaded with PythonQtWrapper_QDialog::accept decorator)
   tail = recursiveFindDecoratorSlotsFromDecoratorProvider(memberName, tail, found, _cachedMembers, 0);
-  
+
   return found;
 }
 
@@ -275,7 +275,7 @@ bool PythonQtClassInfo::lookForEnumAndCache(const QMetaObject* meta, const char*
     QMetaEnum e = meta->enumerator(i);
     // we do not want flags, they will cause our values to appear two times
     if (e.isFlag()) continue;
-    
+
     for (int j=0; j < e.keyCount(); j++) {
       if (qstrcmp(e.key(j), memberName)==0) {
         PyObject* enumType = findEnumWrapper(e.name());
@@ -305,7 +305,7 @@ PythonQtMemberInfo PythonQtClassInfo::member(const char* memberName)
     return info;
   } else {
     bool found = false;
-  
+
     found = lookForPropertyAndCache(memberName);
     if (!found) {
       found = lookForMethodAndCache(memberName);
@@ -356,7 +356,7 @@ PythonQtMemberInfo PythonQtClassInfo::member(const char* memberName)
       // since python keywords can not be looked up, we check if the name contains a single trailing _
       // and remove that and look again, so that we e.g. find exec on an exec_ lookup
       QByteArray mbrName(memberName);
-      if ((mbrName.length()>2) && 
+      if ((mbrName.length()>2) &&
           (mbrName.at(mbrName.length()-1) == '_') &&
           (mbrName.at(mbrName.length()-2) != '_')) {
         mbrName = mbrName.mid(0,mbrName.length()-1);
@@ -431,7 +431,7 @@ void PythonQtClassInfo::listDecoratorSlotsFromDecoratorProvider(QStringList& lis
       QMetaMethod m = meta->method(i);
       if ((m.methodType() == QMetaMethod::Method ||
            m.methodType() == QMetaMethod::Slot) && m.access() == QMetaMethod::Public) {
-        
+
         QByteArray signature = PythonQtUtils::methodName(m);
         bool isClassDeco = false;
         if (signature.startsWith("static_")) {
@@ -445,7 +445,7 @@ void PythonQtClassInfo::listDecoratorSlotsFromDecoratorProvider(QStringList& lis
         }
         // XXX no checking is currently done if the slots have correct first argument or not...
         if (!metaOnly || isClassDeco) {
-          list << QString::fromLatin1(signature.constData()); 
+          list << QString::fromLatin1(signature.constData());
         }
       }
     }
@@ -519,7 +519,7 @@ QStringList PythonQtClassInfo::memberList()
       info->listDecoratorSlotsFromDecoratorProvider(l, false);
     }
   }
-  
+
   // List enumerator keys...
   QList<const QMetaObject*> enumMetaObjects;
   if (_meta) {
@@ -531,7 +531,7 @@ QStringList PythonQtClassInfo::memberList()
   Q_FOREACH(QObject* deco, decoObjects) {
     enumMetaObjects << deco->metaObject();
   }
-  
+
   Q_FOREACH(const QMetaObject* meta, enumMetaObjects) {
     for (int i = 0; i<meta->enumeratorCount(); i++) {
       QMetaEnum e = meta->enumerator(i);
@@ -553,7 +553,8 @@ QStringList PythonQtClassInfo::memberList()
     }
   }
 
-  return QSet<QString>::fromList(l).toList();
+  QSet<QString> set(std::begin(l), std::end(l));
+  return QStringList(std::begin(set), std::end(set));
 }
 
 const QByteArray& PythonQtClassInfo::className() const
@@ -609,10 +610,10 @@ QString PythonQtClassInfo::help()
   decorator();
   QString h;
   h += QString("--- ") + QString(className()) + QString(" ---\n");
-  
+
   if (_isQObject) {
     h += "Properties:\n";
-  
+
     int i;
     int numProperties = _meta->propertyCount();
     for (i = 0; i < numProperties; i++) {
@@ -620,7 +621,7 @@ QString PythonQtClassInfo::help()
       h += QString(p.name()) + " (" + QString(p.typeName()) + " )\n";
     }
   }
-  
+
   if (constructors()) {
     h += "Constructors:\n";
     PythonQtSlotInfo* constr = constructors();
@@ -645,10 +646,10 @@ QString PythonQtClassInfo::help()
       }
     }
   }
-  
+
   // TODO xxx : decorators and enums from decorator() are missing...
   // maybe we can reuse memberlist()?
-  
+
   if (_meta && _meta->enumeratorCount()) {
     h += "Enums:\n";
     for (int i = 0; i<_meta->enumeratorCount(); i++) {
@@ -967,7 +968,7 @@ PythonQtSlotInfo* PythonQtClassInfo::getCopyConstructor()
   PythonQtSlotInfo* construc = constructors();
   while (construc) {
     if ((construc->parameterCount() == 2) &&
-        (construc->parameters().at(1).name == _wrappedClassName) &&  
+        (construc->parameters().at(1).name == _wrappedClassName) &&
         (construc->parameters().at(1).pointerCount == 0)) {
       return construc;
     }
@@ -1006,8 +1007,8 @@ void PythonQtClassInfo::updateRefCountingCBs()
       PythonQtClassInfo* parent = _parentClasses.at(0)._parent;
       parent->updateRefCountingCBs();
       // propagate to ourself
-      _refCallback = parent->_refCallback; 
-      _unrefCallback = parent->_unrefCallback; 
+      _refCallback = parent->_refCallback;
+      _unrefCallback = parent->_unrefCallback;
     }
   }
   _searchRefCountCB = false;
