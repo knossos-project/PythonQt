@@ -95,4 +95,6 @@
 #define PyBytes_FromStringAndSize PyString_FromStringAndSize
 #endif
 
+#include "python data exports.h"
+
 #endif
