@@ -324,7 +324,7 @@ static void initializeSlots(PythonQtClassWrapper* wrap)
 static PyObject* PythonQtClassWrapper_alloc(PyTypeObject *self, Py_ssize_t nitems)
 {
   // call the default type alloc
-  PyObject* obj = LoadPythonSymbol(PyType_Type).tp_alloc(self, nitems);
+  PyObject* obj = PyType_Type.tp_alloc(self, nitems);
 
   // take current class type, if we are called via newPythonQtClassWrapper()
   PythonQtClassWrapper* wrap = (PythonQtClassWrapper*)obj;
@@ -340,7 +340,7 @@ static PyObject* PythonQtClassWrapper_alloc(PyTypeObject *self, Py_ssize_t nitem
 static int PythonQtClassWrapper_init(PythonQtClassWrapper* self, PyObject* args, PyObject* kwds)
 {
   // call the default type init
-  if (LoadPythonSymbol(PyType_Type).tp_init((PyObject *)self, args, kwds) < 0) {
+  if (PyType_Type.tp_init((PyObject *)self, args, kwds) < 0) {
     return -1;
   }
   self->_dynamicClassInfo = NULL;
@@ -446,7 +446,7 @@ static PyObject *PythonQtClassWrapper_getattro(PyObject *obj, PyObject *name)
   }
   if (obj == (PyObject*)&PythonQtInstanceWrapper_Type) {
     // if we are called as PythonQtInstanceWrapper_Type, we need to get the properties from the type...
-    PyObject* superAttr = LoadPythonSymbol(PyType_Type).tp_getattro(obj, name);
+    PyObject* superAttr = PyType_Type.tp_getattro(obj, name);
     return superAttr;
   }
 
@@ -480,7 +480,7 @@ static PyObject *PythonQtClassWrapper_getattro(PyObject *obj, PyObject *name)
 
     if (wrapper->classInfo()->constructors()) {
       PyObject* initName = PyString_FromString("__init__");
-      PyObject* func = LoadPythonSymbol(PyType_Type).tp_getattro(obj, initName);
+      PyObject* func = PyType_Type.tp_getattro(obj, initName);
       Py_DECREF(initName);
       PyDict_SetItemString(dict, "__init__", func);
       Py_DECREF(func);
@@ -496,7 +496,7 @@ static PyObject *PythonQtClassWrapper_getattro(PyObject *obj, PyObject *name)
   }
 
   // look in Python to support derived Python classes
-  PyObject* superAttr = LoadPythonSymbol(PyType_Type).tp_getattro(obj, name);
+  PyObject* superAttr = PyType_Type.tp_getattro(obj, name);
   if (superAttr) {
     return superAttr;
   }
@@ -559,7 +559,7 @@ static PyObject *PythonQtClassWrapper_getattro(PyObject *obj, PyObject *name)
 
 static int PythonQtClassWrapper_setattro(PyObject *obj,PyObject *name,PyObject *value)
 {
-  return LoadPythonSymbol(PyType_Type).tp_setattro(obj,name,value);
+  return PyType_Type.tp_setattro(obj,name,value);
 }
 
 /*

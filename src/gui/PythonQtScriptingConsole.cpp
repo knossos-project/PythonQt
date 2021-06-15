@@ -173,7 +173,7 @@ void PythonQtScriptingConsole::executeCode(const QString& code)
   _stdErr = "";
   PythonQtObjectPtr p;
   PyObject* dict = NULL;
-  if (PyObject_TypeCheck(_context, &LoadPythonSymbol(PyModule_Type))) {
+  if (PyModule_Check(_context)) {
     dict = PyModule_GetDict(_context);
   } else if (PyDict_Check(_context)) {
     dict = _context;

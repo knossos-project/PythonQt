@@ -134,13 +134,13 @@ if (${PythonQtAll})
 endif()
 #-----------------------------------------------------------------------------
 # Tests
-#add_subdirectory(tests EXCLUDE_FROM_ALL)
+add_subdirectory(tests EXCLUDE_FROM_ALL)
 add_custom_target(tests
 	COMMAND PythonQt_Tests
 	DEPENDS ${PythonQt}
 	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src#preliminary hack to find the dll on windows
 )
-#add_dependencies(tests PythonQt_Tests)
+add_dependencies(tests PythonQt_Tests)
 
 #-----------------------------------------------------------------------------
 # uninstall target
