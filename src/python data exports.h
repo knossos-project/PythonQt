@@ -1,6 +1,6 @@
 #pragma once
 
-#include <windows.h>
+#include <libloaderapi.h>
 
 static auto pythonDll = [](){
     static auto pythonDll = GetModuleHandle("python27.dll");
