@@ -814,13 +814,13 @@ bool PythonQtConv::PyObjGetBool(PyObject* val, bool strict, bool &ok) {
 int PythonQtConv::PyObjGetInt(PyObject* val, bool strict, bool &ok) {
   int d = 0;
   ok = true;
-  if (val->ob_type == &PyInt_Type) {
+  if (val->ob_type == &LoadPythonSymbol(PyInt_Type)) {
     d = PyInt_AS_LONG(val);
   } else if (!strict) {
-    if (PyObject_TypeCheck(val, &PyInt_Type)) {
+    if (PyObject_TypeCheck(val, &LoadPythonSymbol(PyInt_Type))) {
       // support for derived int classes, e.g. for our enums
       d = PyInt_AS_LONG(val);
-    } else if (val->ob_type == &PyFloat_Type) {
+    } else if (val->ob_type == &LoadPythonSymbol(PyFloat_Type)) {
       d = floor(PyFloat_AS_DOUBLE(val));
     } else if (val->ob_type == &PyLong_Type) {
       // handle error on overflow!
@@ -848,17 +848,17 @@ qint64 PythonQtConv::PyObjGetLongLong(PyObject* val, bool strict, bool &ok) {
   qint64 d = 0;
   ok = true;
 #ifndef PY3K
-  if (val->ob_type == &PyInt_Type) {
+  if (val->ob_type == &LoadPythonSymbol(PyInt_Type)) {
     d = PyInt_AS_LONG(val);
   } else
 #endif
   if (val->ob_type == &PyLong_Type) {
     d = PyLong_AsLongLong(val);
   } else if (!strict) {
-    if (PyObject_TypeCheck(val, &PyInt_Type)) {
+    if (PyObject_TypeCheck(val, &LoadPythonSymbol(PyInt_Type))) {
       // support for derived int classes, e.g. for our enums
       d = PyInt_AS_LONG(val);
-    } else if (val->ob_type == &PyFloat_Type) {
+    } else if (val->ob_type == &LoadPythonSymbol(PyFloat_Type)) {
       d = floor(PyFloat_AS_DOUBLE(val));
     } else if (val == Py_False) {
       d = 0;
@@ -883,17 +883,17 @@ quint64 PythonQtConv::PyObjGetULongLong(PyObject* val, bool strict, bool &ok) {
   quint64 d = 0;
   ok = true;
 #ifndef PY3K
-  if (Py_TYPE(val) == &PyInt_Type) {
+  if (Py_TYPE(val) == &LoadPythonSymbol(PyInt_Type)) {
     d = PyInt_AS_LONG(val);
   } else
 #endif
   if (Py_TYPE(val) == &PyLong_Type) {
     d = PyLong_AsUnsignedLongLong(val);
   } else if (!strict) {
-    if (PyObject_TypeCheck(val, &PyInt_Type)) {
+    if (PyObject_TypeCheck(val, &LoadPythonSymbol(PyInt_Type))) {
       // support for derived int classes, e.g. for our enums
       d = PyInt_AS_LONG(val);
-    } else if (val->ob_type == &PyFloat_Type) {
+    } else if (val->ob_type == &LoadPythonSymbol(PyFloat_Type)) {
       d = floor(PyFloat_AS_DOUBLE(val));
     } else if (val == Py_False) {
       d = 0;
@@ -917,11 +917,11 @@ quint64 PythonQtConv::PyObjGetULongLong(PyObject* val, bool strict, bool &ok) {
 double PythonQtConv::PyObjGetDouble(PyObject* val, bool strict, bool &ok) {
   double d = 0;
   ok = true;
-  if (val->ob_type == &PyFloat_Type) {
+  if (val->ob_type == &LoadPythonSymbol(PyFloat_Type)) {
     d = PyFloat_AS_DOUBLE(val);
   } else if (!strict) {
 #ifndef PY3K
-    if (PyObject_TypeCheck(val, &PyInt_Type)) {
+    if (PyObject_TypeCheck(val, &LoadPythonSymbol(PyInt_Type))) {
       d = PyInt_AS_LONG(val);
     } else
 #endif
@@ -994,7 +994,7 @@ QVariant PythonQtConv::PyObjToQVariant(PyObject* val, int type)
     } else if (val == Py_False || val == Py_True) {
       type = QVariant::Bool;
 #ifndef PY3K
-    } else if (PyObject_TypeCheck(val, &PyInt_Type)) {
+    } else if (PyObject_TypeCheck(val, &LoadPythonSymbol(PyInt_Type))) {
       type = QVariant::Int;
 #endif
     } else if (PyLong_Check(val)) {
@@ -1496,12 +1496,12 @@ QByteArray PythonQtConv::getCPPTypeName(PyObject* type)
       }
     } else {
       PyTypeObject* typeObject = reinterpret_cast<PyTypeObject*>(type);
-      if (typeObject == &PyFloat_Type) {
+      if (typeObject == &LoadPythonSymbol(PyFloat_Type)) {
         result = "double";
       } else if (typeObject == &PyBool_Type) {
         result = "bool";
 #ifndef PY3K
-      } else if (typeObject == &PyInt_Type) {
+      } else if (typeObject == &LoadPythonSymbol(PyInt_Type)) {
         result = "qint32";
 #endif
       } else if (typeObject == &PyLong_Type) {

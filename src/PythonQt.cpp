@@ -295,7 +295,7 @@ PythonQt::PythonQt(int flags, const QByteArray& pythonQtModuleName)
 #endif
     if (flags & IgnoreSiteModule) {
       // this prevents the automatic importing of Python site files
-      Py_NoSiteFlag = 1;
+      LoadPythonSymbol(Py_NoSiteFlag) = 1;
     }
     Py_Initialize();
   }
@@ -328,7 +328,7 @@ PythonQt::PythonQt(int flags, const QByteArray& pythonQtModuleName)
   Py_INCREF(&PythonQtBoolResult_Type);
 
   // according to Python docs, set the type late here, since it can not safely be stored in the struct when declaring it
-  PythonQtClassWrapper_Type.tp_base = &PyType_Type;
+  PythonQtClassWrapper_Type.tp_base = &LoadPythonSymbol(PyType_Type);
   // add our own python object types for classes
   if (PyType_Ready(&PythonQtClassWrapper_Type) < 0) {
     std::cerr << "could not initialize PythonQtClassWrapper_Type" << ", in " << __FILE__ << ":" << __LINE__ << std::endl;
@@ -747,7 +747,7 @@ PyObject* PythonQtPrivate::createNewPythonQtEnumWrapper(const char* enumName, Py
 #ifdef PY3K
   PyTuple_SET_ITEM(baseClasses, 0, (PyObject*)&PyLong_Type);
 #else
-  PyTuple_SET_ITEM(baseClasses, 0, (PyObject*)&PyInt_Type);
+  PyTuple_SET_ITEM(baseClasses, 0, (PyObject*)&LoadPythonSymbol(PyInt_Type));
 #endif
 
   PyObject* module = PyObject_GetAttrString(parentObject, "__module__");
@@ -757,7 +757,7 @@ PyObject* PythonQtPrivate::createNewPythonQtEnumWrapper(const char* enumName, Py
   PyObject* args  = Py_BuildValue("OOO", className, baseClasses, typeDict);
 
   // create the new int derived type object by calling the core type
-  result = PyObject_Call((PyObject *)&PyType_Type, args, NULL);
+  result = PyObject_Call((PyObject *)&LoadPythonSymbol(PyType_Type), args, NULL);
 
   Py_DECREF(baseClasses);
   Py_DECREF(typeDict);
@@ -889,7 +889,7 @@ QVariant PythonQt::evalCode(PyObject* object, PyObject* pycode) {
   if (pycode) {
     PyObject* dict = NULL;
     PyObject* globals = NULL;
-    if (PyModule_Check(object)) {
+    if (PyObject_TypeCheck(object, &LoadPythonSymbol(PyModule_Type))) {
       dict = PyModule_GetDict(object);
       globals = dict;
     } else if (PyDict_Check(object)) {
@@ -931,7 +931,7 @@ QVariant PythonQt::evalScript(PyObject* object, const QString& script, int start
   PythonQtObjectPtr p;
   PyObject* dict = NULL;
   clearError();
-  if (PyModule_Check(object)) {
+  if (PyObject_TypeCheck(object, &LoadPythonSymbol(PyModule_Type))) {
     dict = PyModule_GetDict(object);
   } else if (PyDict_Check(object)) {
     dict = object;
@@ -998,7 +998,7 @@ PythonQtObjectPtr PythonQt::createUniqueModule()
 
 void PythonQt::addObject(PyObject* object, const QString& name, QObject* qObject)
 {
-  if (PyModule_Check(object)) {
+  if (PyObject_TypeCheck(object, &LoadPythonSymbol(PyModule_Type))) {
     PyModule_AddObject(object, name.toLatin1().data(), _p->wrapQObject(qObject));
   } else if (PyDict_Check(object)) {
     PyDict_SetItemString(object, name.toLatin1().data(), _p->wrapQObject(qObject));
@@ -1009,7 +1009,7 @@ void PythonQt::addObject(PyObject* object, const QString& name, QObject* qObject
 
 void PythonQt::addVariable(PyObject* object, const QString& name, const QVariant& v)
 {
-  if (PyModule_Check(object)) {
+  if (PyObject_TypeCheck(object, &LoadPythonSymbol(PyModule_Type))) {
     PyModule_AddObject(object, name.toLatin1().data(), PythonQtConv::QVariantToPyObject(v));
   } else if (PyDict_Check(object)) {
     PyDict_SetItemString(object, name.toLatin1().data(), PythonQtConv::QVariantToPyObject(v));
@@ -1139,30 +1139,30 @@ QStringList PythonQt::introspectObject(PyObject* object, ObjectType type)
             break;
           case Variable:
             if (
-              value->ob_type != &PyCFunction_Type
-              && value->ob_type != &PyFunction_Type
-              && value->ob_type != &PyMethod_Type
-              && value->ob_type != &PyModule_Type
-              && value->ob_type != &PyType_Type
+              value->ob_type != &LoadPythonSymbol(PyCFunction_Type)
+              && value->ob_type != &LoadPythonSymbol(PyFunction_Type)
+              && value->ob_type != &LoadPythonSymbol(PyMethod_Type)
+              && value->ob_type != &LoadPythonSymbol(PyModule_Type)
+              && value->ob_type != &LoadPythonSymbol(PyType_Type)
               && value->ob_type != &PythonQtSlotFunction_Type
 #ifndef PY3K
-              && value->ob_type != &PyClass_Type
+              && value->ob_type != &LoadPythonSymbol(PyClass_Type)
 #endif
               ) {
               results << keystr;
             }
             break;
           case Function:
-            if (value->ob_type == &PyCFunction_Type ||
-                value->ob_type == &PyFunction_Type ||
-                value->ob_type == &PyMethod_Type ||
+            if (value->ob_type == &LoadPythonSymbol(PyCFunction_Type) ||
+                value->ob_type == &LoadPythonSymbol(PyFunction_Type) ||
+                value->ob_type == &LoadPythonSymbol(PyMethod_Type) ||
                 value->ob_type == &PythonQtSlotFunction_Type
               ) {
               results << keystr;
             }
             break;
           case Module:
-            if (value->ob_type == &PyModule_Type) {
+            if (value->ob_type == &LoadPythonSymbol(PyModule_Type)) {
               results << keystr;
             }
             break;
@@ -2130,7 +2130,7 @@ int PythonQtPrivate::handleMetaCall(QObject* object, PythonQtInstanceWrapper* wr
     }
     PythonQtProperty* prop = NULL;
     // Get directly from the Python class, since we don't want to get the value of the property
-    PyObject* maybeProp = PyBaseObject_Type.tp_getattro((PyObject*)wrapper, PyString_FromString(metaProp.name()));
+    PyObject* maybeProp = LoadPythonSymbol(PyBaseObject_Type).tp_getattro((PyObject*)wrapper, PyString_FromString(metaProp.name()));
     if (maybeProp && PythonQtProperty_Check(maybeProp)) {
       prop = (PythonQtProperty*)maybeProp;
     } else {

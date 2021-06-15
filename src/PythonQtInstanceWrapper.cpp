@@ -133,7 +133,7 @@ static PyObject* PythonQtInstanceWrapper_new(PyTypeObject *type, PyObject * /*ar
     emptyTuple = PyTuple_New(0);
   }
 
-  self = (PythonQtInstanceWrapper*)PyBaseObject_Type.tp_new(type, emptyTuple, NULL);
+  self = (PythonQtInstanceWrapper*)LoadPythonSymbol(PyBaseObject_Type).tp_new(type, emptyTuple, NULL);
 
   if (self != NULL) {
     new (&self->_obj) QPointer<QObject>();
@@ -391,7 +391,7 @@ static PyObject *PythonQtInstanceWrapper_getattro(PyObject *obj,PyObject *name)
   }
 
   if (qstrcmp(attributeName, "__dict__")==0) {
-    PyObject* dict = PyBaseObject_Type.tp_getattro(obj, name);
+    PyObject* dict = LoadPythonSymbol(PyBaseObject_Type).tp_getattro(obj, name);
     dict = PyDict_Copy(dict);
 
     if (wrapper->_obj) {
@@ -442,7 +442,7 @@ static PyObject *PythonQtInstanceWrapper_getattro(PyObject *obj,PyObject *name)
   }
 
   // first look in super, to return derived methods from base object first
-  PyObject* superAttr = PyBaseObject_Type.tp_getattro(obj, name);
+  PyObject* superAttr = LoadPythonSymbol(PyBaseObject_Type).tp_getattro(obj, name);
   if (superAttr) {
     if (PythonQtProperty_Check(superAttr)) {
       // call the getter on the property
@@ -595,7 +595,7 @@ static PyObject *PythonQtInstanceWrapper_getattro(PyObject *obj,PyObject *name)
   }
 
   QString error = QString(wrapper->classInfo()->className()) + " has no attribute named '" + QString(attributeName) + "'";
-  PyErr_SetString(PyExc_AttributeError, error.toLatin1().data());
+  PyErr_SetString(LoadPythonSymbol(PyExc_AttributeError), error.toLatin1().data());
   return NULL;
 }
 
@@ -707,7 +707,7 @@ static int PythonQtInstanceWrapper_setattro(PyObject *obj,PyObject *name,PyObjec
     if (obj->ob_type->tp_base != &PythonQtInstanceWrapper_Type) {
 
       // first check if this is a Property
-      PyObject* superAttr = PyBaseObject_Type.tp_getattro(obj, name);
+      PyObject* superAttr = LoadPythonSymbol(PyBaseObject_Type).tp_getattro(obj, name);
       if (superAttr) {
         // handle QtCore.Propery setter
         if (PythonQtProperty_Check(superAttr)) {
@@ -721,7 +721,7 @@ static int PythonQtInstanceWrapper_setattro(PyObject *obj,PyObject *name,PyObjec
       }
       PyErr_Clear();
       // otherwise call the default Python setattro
-      return PyBaseObject_Type.tp_setattro(obj,name,value);
+      return LoadPythonSymbol(PyBaseObject_Type).tp_setattro(obj,name,value);
     } else {
       error = QString("'") + attributeName + "' does not exist on " + obj->ob_type->tp_name + " and creating new attributes on C++ objects is not allowed";
     }
