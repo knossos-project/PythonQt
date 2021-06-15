@@ -300,33 +300,45 @@ PythonQt::PythonQt(int flags, const QByteArray& pythonQtModuleName)
     Py_Initialize();
   }
 
+  void createPythonQtSlotFunction_Type();
+  createPythonQtSlotFunction_Type();
   // add our own python object types for qt object slots
   if (PyType_Ready(&PythonQtSlotFunction_Type) < 0) {
     std::cerr << "could not initialize PythonQtSlotFunction_Type" << ", in " << __FILE__ << ":" << __LINE__ << std::endl;
   }
   Py_INCREF(&PythonQtSlotFunction_Type);
 
+  void createPythonQtSignalFunction_Type();
+  createPythonQtSignalFunction_Type();
   if (PyType_Ready(&PythonQtSignalFunction_Type) < 0) {
     std::cerr << "could not initialize PythonQtSignalFunction_Type" << ", in " << __FILE__ << ":" << __LINE__ << std::endl;
   }
   Py_INCREF(&PythonQtSignalFunction_Type);
 
+  void createPythonQtSlotDecorator_Type();
+  createPythonQtSlotDecorator_Type();
   if (PyType_Ready(&PythonQtSlotDecorator_Type) < 0) {
     std::cerr << "could not initialize PythonQtSlotDecorator_Type" << ", in " << __FILE__ << ":" << __LINE__ << std::endl;
   }
   Py_INCREF(&PythonQtSlotDecorator_Type);
 
+  void createPythonQtProperty_Type();
+  createPythonQtProperty_Type();
   if (PyType_Ready(&PythonQtProperty_Type) < 0) {
     std::cerr << "could not initialize PythonQtProperty_Type" << ", in " << __FILE__ << ":" << __LINE__ << std::endl;
   }
   Py_INCREF(&PythonQtProperty_Type);
 
+  void createPythonQtBoolResult_Type();
+  createPythonQtBoolResult_Type();
   PythonQtBoolResult_Type.tp_new = PyType_GenericNew;
   if (PyType_Ready(&PythonQtBoolResult_Type) < 0) {
     std::cerr << "could not initialize PythonQtBoolResult_Type" << ", in " << __FILE__ << ":" << __LINE__ << std::endl;
   }
   Py_INCREF(&PythonQtBoolResult_Type);
 
+  void createPythonQtClassWrapper_Type();
+  createPythonQtClassWrapper_Type();
   // according to Python docs, set the type late here, since it can not safely be stored in the struct when declaring it
   PythonQtClassWrapper_Type.tp_base = &PyType_Type;
   // add our own python object types for classes
@@ -335,6 +347,8 @@ PythonQt::PythonQt(int flags, const QByteArray& pythonQtModuleName)
   }
   Py_INCREF(&PythonQtClassWrapper_Type);
 
+  void createPythonQtInstanceWrapper_Type();
+  createPythonQtInstanceWrapper_Type();
   // add our own python object types for CPP instances
   if (PyType_Ready(&PythonQtInstanceWrapper_Type) < 0) {
     PythonQt::handleError();
@@ -342,12 +356,16 @@ PythonQt::PythonQt(int flags, const QByteArray& pythonQtModuleName)
   }
   Py_INCREF(&PythonQtInstanceWrapper_Type);
 
+  void createPythonQtStdOutRedirectType();
+  createPythonQtStdOutRedirectType();
   // add our own python object types for redirection of stdout
   if (PyType_Ready(&PythonQtStdOutRedirectType) < 0) {
     std::cerr << "could not initialize PythonQtStdOutRedirectType" << ", in " << __FILE__ << ":" << __LINE__ << std::endl;
   }
   Py_INCREF(&PythonQtStdOutRedirectType);
 
+  void createPythonQtStdInRedirectType();
+  createPythonQtStdInRedirectType();
   // add our own python object types for redirection of stdin
   if (PyType_Ready(&PythonQtStdInRedirectType) < 0) {
     std::cerr << "could not initialize PythonQtStdInRedirectType" << ", in " << __FILE__ << ":" << __LINE__ << std::endl;

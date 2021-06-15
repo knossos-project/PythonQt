@@ -751,7 +751,10 @@ meth_richcompare(PythonQtSlotFunctionObject *a, PythonQtSlotFunctionObject *b, i
     Py_RETURN_FALSE;
 }
 
-PyTypeObject PythonQtSlotFunction_Type = {
+PyTypeObject PythonQtSlotFunction_Type = {};
+void createPythonQtSlotFunction_Type() {
+  PythonQtSlotFunction_Type.~PyTypeObject();
+  new(&PythonQtSlotFunction_Type) PyTypeObject{
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     "builtin_qt_slot",
     sizeof(PythonQtSlotFunctionObject),
@@ -788,7 +791,8 @@ PyTypeObject PythonQtSlotFunction_Type = {
     meth_getsets,       /* tp_getset */
     0,          /* tp_base */
     0,          /* tp_dict */
-};
+  };
+}
 
 /* Clear out the free list */
 
