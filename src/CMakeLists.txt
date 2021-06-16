@@ -29,7 +29,7 @@ add_library(${PythonQt} ${SOURCES} ${GEN_MOC} ${GEN_QRC} ${HEADERS})
 if(PythonQt_DynamicMetaObject)
 	target_compile_definitions(${PythonQt} PRIVATE DYNAMIC_META_OBJECT_IMPLEMENTATION)
 endif()
-target_link_libraries(${PythonQt} $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/libpython27.dl.a>$<INSTALL_INTERFACE:/mingw64/lib/libpython27.dl.a>)
+target_link_libraries(${PythonQt} "$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/libpython27.dl.a>$<INSTALL_INTERFACE:python27.dl>")
 target_include_directories(${PythonQt} PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 	$<INSTALL_INTERFACE:include>
