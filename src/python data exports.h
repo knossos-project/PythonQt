@@ -10,7 +10,7 @@ static auto pythonDll = [](){
     return pythonDll;
 };
 
-#define LoadPythonSymbol(name) (*((std::remove_reference_t<decltype(name)>*)GetProcAddress(pythonDll(), #name)))
+#define LoadPythonSymbol(name) (*reinterpret_cast<decltype(name)*>(GetProcAddress(pythonDll(), #name)))
 
 #define PyBaseObject_Type LoadPythonSymbol(PyBaseObject_Type)
 #define PyBaseString_Type LoadPythonSymbol(PyBaseString_Type)
