@@ -289,7 +289,7 @@ void PythonQtTestSlotCalling::testCppFactory()
 
   // test decorated enums
   // already registered by signals test
-  //PythonQt::self()->registerCPPClass("PQCppObject2",NULL,NULL, PythonQtCreateObject<PQCppObject2Decorator>);
+  PythonQt::self()->registerCPPClass("PQCppObject2",NULL,NULL, PythonQtCreateObject<PQCppObject2Decorator>);
   
   // local enum (decorated)
   QVERIFY(_helper->runScript("obj.testNoArg()\nfrom PythonQt.private import PQCppObject2\na = PQCppObject2()\nprint(a.testEnumFlag1)\nif a.testEnumFlag1(PQCppObject2.TestEnumValue2)==PQCppObject2.TestEnumValue2: obj.setPassed();\n"));
@@ -358,8 +358,10 @@ void PythonQtTestSignalHandler::testSignalHandler()
   PyRun_SimpleString("def testIntSignal(a):\n  if a==12: obj.setPassed();\n");
   QVERIFY(PythonQt::self()->addSignalHandler(_helper, SIGNAL(intSignal(int)), main, "testIntSignal"));
   QVERIFY(_helper->emitIntSignal(12));
+  PyErr_Print();
 
   PyRun_SimpleString("def testFloatSignal(a):\n  if a==12: obj.setPassed();\n");
+  PyRun_SimpleString("print('foo', testFloatSignal(5))");
   QVERIFY(PythonQt::self()->addSignalHandler(_helper, SIGNAL(floatSignal(float)), main, "testFloatSignal"));
   QVERIFY(_helper->emitFloatSignal(12));
 
