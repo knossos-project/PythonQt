@@ -85,7 +85,10 @@ static PyMemberDef PythonQtStdInRedirect_members[] = {
   {nullptr}  /* Sentinel */
 };
 
-PyTypeObject PythonQtStdInRedirectType = {
+PyTypeObject PythonQtStdInRedirectType = {};
+void createPythonQtStdInRedirectType() {
+  PythonQtStdInRedirectType.~PyTypeObject();
+  new(&PythonQtStdInRedirectType) PyTypeObject{
     PyVarObject_HEAD_INIT(nullptr, 0)
     "PythonQtStdInRedirect",        /*tp_name*/
     sizeof(PythonQtStdInRedirect),  /*tp_basicsize*/
@@ -124,4 +127,5 @@ PyTypeObject PythonQtStdInRedirectType = {
     nullptr,                   /* tp_init */
     nullptr,                   /* tp_alloc */
     PythonQtStdInRedirect_new,       /* tp_new */
-};
+  };
+}

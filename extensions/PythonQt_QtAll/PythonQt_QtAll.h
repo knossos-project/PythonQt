@@ -34,13 +34,15 @@
  */
 
 #ifdef WIN32
-#ifdef PYTHONQT_QTALL_EXPORTS
-#define PYTHONQT_QTALL_EXPORT __declspec(dllexport)
-#else
-#define PYTHONQT_QTALL_EXPORT __declspec(dllimport)
-#endif
-#else
-#define PYTHONQT_QTALL_EXPORT
+  #ifndef PYTHONQT_STATIC
+    #ifdef PYTHONQT_QTALL_EXPORTS
+      #define PYTHONQT_QTALL_EXPORT __declspec(dllexport)
+    #else
+      #define PYTHONQT_QTALL_EXPORT __declspec(dllimport)
+    #endif
+  #else
+    #define PYTHONQT_QTALL_EXPORT
+  #endif
 #endif
 
 namespace PythonQt_QtAll

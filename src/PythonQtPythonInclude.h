@@ -83,6 +83,8 @@
 #undef PYTHONQT_RESTORE_KEYWORDS
 #endif
 
+#include "python data exports.h"
+
 #if PY_MAJOR_VERSION >= 3
 #define PY3K
 // Helper defines to facilitate porting
