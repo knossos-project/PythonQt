@@ -44,10 +44,9 @@
 #define PYTHONQT_RESTORE_KEYWORDS
 #endif
 
-//in pyconfig.h, the 64 bit flag is only set for the Microsoft Compiler
-#ifdef _WIN64
-#define MS_WIN64
-#endif
+//#include <windows.h>
+
+//#define _Py_tracemalloc_config() (*(struct _PyTraceMalloc_Config*)(GetProcAddress(GetModuleHandle("libpython3.8.dll"), "_Py_tracemalloc_config")))
 
 // If PYTHONQT_USE_RELEASE_PYTHON_FALLBACK is enabled, try to link
 // release Python DLL if it is available by undefining _DEBUG while
@@ -69,6 +68,8 @@
 #define slots Q_SLOTS
 #undef PYTHONQT_RESTORE_KEYWORDS
 #endif
+
+#include "python data exports.h"
 
 #if PY_MAJOR_VERSION >= 3
 #define PY3K

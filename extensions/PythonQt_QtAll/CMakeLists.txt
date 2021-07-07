@@ -40,7 +40,7 @@ endif()
 qt_wrap_cpp(GEN_MOC ${GEN_HEADERS})
 
 add_library(${PythonQt_QtAll} ${SOURCES} ${HEADERS} ${GEN_SOURCES} ${GEN_MOC})
-target_link_libraries(${PythonQt_QtAll} ${PythonQt} ${PYTHON_LIBRARIES})
+target_link_libraries(${PythonQt_QtAll} PUBLIC ${PythonQt} ${PYTHON_LIBRARIES})
 target_include_directories(${PythonQt_QtAll} PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 	$<INSTALL_INTERFACE:include>

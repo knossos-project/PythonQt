@@ -14,7 +14,7 @@ endif()
 qt_wrap_cpp(GEN_MOC ${HEADERS})#replacable by automoc
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${GEN_MOC})
-target_link_libraries(${PROJECT_NAME} ${PythonQt_QtAll} ${PythonQt})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${PythonQt_QtAll} ${PythonQt})
 
 qt_use_modules(${PROJECT_NAME} Core Gui)
 if(PythonQt_Qt5)

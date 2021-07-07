@@ -300,6 +300,12 @@ PythonQt::PythonQt(int flags, const QByteArray& pythonQtModuleName)
     Py_Initialize();
   }
 
+#ifdef PYTHONQT_FULL_THREAD_SUPPORT
+  if (!PyEval_ThreadsInitialized()) {
+    PyEval_InitThreads();
+  }
+#endif
+
   void createPythonQtSlotFunction_Type();
   createPythonQtSlotFunction_Type();
   // add our own python object types for qt object slots
@@ -410,7 +416,13 @@ void PythonQt::setRedirectStdInCallback(PythonQtInputChangedCB* callback, void *
 
   // Backup original 'sys.stdin' if not yet done
   if( !PyObject_HasAttrString(sys.object(), "pythonqt_original_stdin") ) {
+<<<<<<< HEAD
     PyObject_SetAttrString(sys.object(), "pythonqt_original_stdin", PyObject_GetAttrString(sys.object(), "stdin"));
+=======
+    PyObject *stdins = PyObject_GetAttrString(sys.object(), "stdin");
+    PyObject_SetAttrString(sys.object(), "pythonqt_original_stdin", stdins);
+    Py_XDECREF(stdins);
+>>>>>>> 167e516... asd
   }
 
   in = PythonQtStdInRedirectType.tp_new(&PythonQtStdInRedirectType, NULL, NULL);
@@ -429,6 +441,7 @@ void PythonQt::setRedirectStdInCallbackEnabled(bool enabled)
   PythonQtObjectPtr sys;
   sys.setNewRef(PyImport_ImportModule("sys"));
 
+<<<<<<< HEAD
   if (enabled) {
     if( !PyObject_HasAttrString(sys.object(), "pythonqt_stdin") ) {
       PyObject_SetAttrString(sys.object(), "stdin", PyObject_GetAttrString(sys.object(), "pythonqt_stdin"));
@@ -438,6 +451,21 @@ void PythonQt::setRedirectStdInCallbackEnabled(bool enabled)
       PyObject_SetAttrString(sys.object(), "stdin", PyObject_GetAttrString(sys.object(), "pythonqt_original_stdin"));
     }
   }
+=======
+  PythonQtObjectPtr stdins;
+  if (enabled) {
+    if( PyObject_HasAttrString(sys.object(), "pythonqt_stdin") ) {
+      stdins.setNewRef(PyObject_GetAttrString(sys.object(), "pythonqt_stdin"));
+    }
+  } else {
+    if( PyObject_HasAttrString(sys.object(), "pythonqt_original_stdin") ) {
+      stdins.setNewRef(PyObject_GetAttrString(sys.object(), "pythonqt_original_stdin"));
+    }
+  }
+  if (stdins) {
+    PyObject_SetAttrString(sys.object(), "stdin", stdins);
+  }
+>>>>>>> 167e516... asd
 }
 
 PythonQtImportFileInterface* PythonQt::importInterface()

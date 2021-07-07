@@ -47,7 +47,9 @@
 #include "PythonQtSystem.h"
 #include "structmember.h"
 
+class PythonQtClassInfo;
 class PythonQtSlotInfo;
+class QObject;
 
 enum PythonQtPassThisOwnershipType
 {

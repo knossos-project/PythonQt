@@ -39,15 +39,16 @@
 */
 //----------------------------------------------------------------------------------
 
-#include "PythonQt.h"
 #include "PythonQtSlot.h"
-#include "PythonQtInstanceWrapper.h"
+
+#include "PythonQt.h"
 #include "PythonQtClassInfo.h"
-#include "PythonQtMisc.h"
 #include "PythonQtConversion.h"
-#include <iostream>
+#include "PythonQtInstanceWrapper.h"
+//#include "PythonQtMisc.h"
 
 #include <exception>
+#include <iostream>
 #include <stdexcept>
 
 #include <QByteArray>
@@ -751,6 +752,20 @@ meth_richcompare(PythonQtSlotFunctionObject *a, PythonQtSlotFunctionObject *b, i
     Py_RETURN_FALSE;
 }
 
+static PyObject*
+meth_descr_get(PyObject *descr, PyObject *obj, PyObject* type)
+{
+  if (PythonQtSlotFunction_Check(descr)) {
+    PythonQtSlotFunctionObject *slotObj = (PythonQtSlotFunctionObject*)descr;
+    return PythonQtSlotFunction_New(slotObj->m_ml, obj, NULL);
+  }
+  else {
+    // wrong type
+    Py_IncRef(descr);
+    return descr;
+  }
+}
+
 PyTypeObject PythonQtSlotFunction_Type = {};
 void createPythonQtSlotFunction_Type() {
   PythonQtSlotFunction_Type.~PyTypeObject();
@@ -791,6 +806,7 @@ void createPythonQtSlotFunction_Type() {
     meth_getsets,       /* tp_getset */
     0,          /* tp_base */
     0,          /* tp_dict */
+    meth_descr_get,     /* tp_descr_get */
   };
 }
 

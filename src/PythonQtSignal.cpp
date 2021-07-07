@@ -39,13 +39,13 @@
 */
 //----------------------------------------------------------------------------------
 
-#include "PythonQt.h"
 #include "PythonQtSignal.h"
-#include "PythonQtInstanceWrapper.h"
+
+#include "PythonQt.h"
 #include "PythonQtClassInfo.h"
-#include "PythonQtMisc.h"
 #include "PythonQtConversion.h"
-#include "PythonQtSlot.h"
+#include "PythonQtInstanceWrapper.h"
+//#include "PythonQtMisc.h"
 
 #include <iostream>
 
