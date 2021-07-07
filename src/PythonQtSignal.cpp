@@ -39,13 +39,13 @@
 */
 //----------------------------------------------------------------------------------
 
-#include "PythonQt.h"
 #include "PythonQtSignal.h"
-#include "PythonQtInstanceWrapper.h"
+
+#include "PythonQt.h"
 #include "PythonQtClassInfo.h"
-#include "PythonQtMisc.h"
 #include "PythonQtConversion.h"
-#include "PythonQtSlot.h"
+#include "PythonQtInstanceWrapper.h"
+//#include "PythonQtMisc.h"
 
 #include <iostream>
 
@@ -407,7 +407,10 @@ meth_richcompare(PythonQtSignalFunctionObject *a, PythonQtSignalFunctionObject *
 PyDoc_STRVAR(PythonQtSignalFunction_doc,
   "Signal(*types) -> Signal\n");
 
-PyTypeObject PythonQtSignalFunction_Type = {
+PyTypeObject PythonQtSignalFunction_Type = {};
+void createPythonQtSignalFunction_Type() {
+  PythonQtSignalFunction_Type.~PyTypeObject();
+  new(&PythonQtSignalFunction_Type) PyTypeObject{
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     "QtCore.Signal",
     sizeof(PythonQtSignalFunctionObject),
@@ -459,8 +462,8 @@ PyTypeObject PythonQtSignalFunction_Type = {
     nullptr,                  /*tp_subclasses */
     nullptr,                  /*tp_weaklist */
     nullptr,                  /*tp_del */
-
-};
+  };
+}
 
 /* Clear out the free list */
 

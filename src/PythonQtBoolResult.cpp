@@ -117,7 +117,10 @@ static PyNumberMethods PythonQtBoolResult_as_number = {
 #endif
 };
 
-PyTypeObject PythonQtBoolResult_Type = {
+PyTypeObject PythonQtBoolResult_Type = {};
+void createPythonQtBoolResult_Type() {
+  PythonQtBoolResult_Type.~PyTypeObject();
+  new(&PythonQtBoolResult_Type) PyTypeObject{
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     "BoolResult",
     sizeof(PythonQtBoolResultObject),
@@ -154,5 +157,5 @@ PyTypeObject PythonQtBoolResult_Type = {
     nullptr,      /* tp_descr_set */
     0,            /* tp_dictoffset */
     (initproc)&PythonQtBoolResult_init,      /* tp_init */
-};
-
+  };
+}

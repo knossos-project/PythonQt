@@ -47,6 +47,9 @@
 #include "PythonQtSystem.h"
 #include "structmember.h"
 
+#include <QByteArray>
+#include <QList>
+
 class PythonQtSlotInfo;
 
 extern PYTHONQT_EXPORT PyTypeObject PythonQtSignalFunction_Type;

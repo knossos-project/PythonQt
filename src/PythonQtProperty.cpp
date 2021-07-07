@@ -194,7 +194,10 @@ PyDoc_STRVAR(PythonQtProperty_doc,
   "         designable=True, scriptable=True, stored=True, user=False,\n"
   "         constant=False, final=False, notify=None) -> Property\n");
 
-PyTypeObject PythonQtProperty_Type = {
+PyTypeObject PythonQtProperty_Type = {};
+void createPythonQtProperty_Type() {
+  PythonQtProperty_Type.~PyTypeObject();
+  new(&PythonQtProperty_Type) PyTypeObject{
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     "PythonQt.QtCore.Property", /*tp_name*/
     sizeof(PythonQtProperty),   /*tp_basicsize*/
@@ -241,7 +244,8 @@ PyTypeObject PythonQtProperty_Type = {
     nullptr,                    /*tp_subclasses */
     nullptr,                    /*tp_weaklist */
     nullptr,                    /*tp_del */
-};
+  };
+}
 
 bool PythonQtPropertyData::callSetter(PyObject* wrapper, PyObject* newValue)
 {

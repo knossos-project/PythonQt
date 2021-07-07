@@ -119,6 +119,12 @@ set(PythonQt Qt${QT_VERSION_MAJOR}Python${Python_VERSION_MAJOR}${Python_VERSION_
 
 set(CMAKE_DEBUG_POSTFIX "_d")
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options("-fcolor-diagnostics")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    add_compile_options("-fdiagnostics-color=always")
+endif()
+
 #-----------------------------------------------------------------------------
 # Core
 add_subdirectory(src)
