@@ -39,15 +39,16 @@
 */
 //----------------------------------------------------------------------------------
 
-#include "PythonQt.h"
 #include "PythonQtSlot.h"
-#include "PythonQtInstanceWrapper.h"
+
+#include "PythonQt.h"
 #include "PythonQtClassInfo.h"
-#include "PythonQtMisc.h"
 #include "PythonQtConversion.h"
-#include <iostream>
+#include "PythonQtInstanceWrapper.h"
+//#include "PythonQtMisc.h"
 
 #include <exception>
+#include <iostream>
 #include <stdexcept>
 
 #include <QByteArray>
@@ -805,7 +806,10 @@ meth_descr_get(PyObject *descr, PyObject *obj, PyObject* type)
   }
 }
 
-PyTypeObject PythonQtSlotFunction_Type = {
+PyTypeObject PythonQtSlotFunction_Type = {};
+void createPythonQtSlotFunction_Type() {
+  PythonQtSlotFunction_Type.~PyTypeObject();
+  new(&PythonQtSlotFunction_Type) PyTypeObject{
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     "builtin_qt_slot",
     sizeof(PythonQtSlotFunctionObject),
@@ -843,7 +847,8 @@ PyTypeObject PythonQtSlotFunction_Type = {
     0,          /* tp_base */
     0,          /* tp_dict */
     meth_descr_get,     /* tp_descr_get */
-};
+  };
+}
 
 /* Clear out the free list */
 

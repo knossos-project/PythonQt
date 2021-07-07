@@ -1,5 +1,5 @@
-project(PythonQt CXX)
 cmake_minimum_required(VERSION 3.15)
+project(PythonQt CXX)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
@@ -117,6 +117,12 @@ add_definitions(-DPYTHONQT_USE_RELEASE_PYTHON_FALLBACK)
 set(PythonQt Qt${QT_VERSION_MAJOR}Python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} CACHE INTERNAL "")
 
 set(CMAKE_DEBUG_POSTFIX "_d")
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options("-fcolor-diagnostics")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    add_compile_options("-fdiagnostics-color=always")
+endif()
 
 #-----------------------------------------------------------------------------
 # Core

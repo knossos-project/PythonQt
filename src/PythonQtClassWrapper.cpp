@@ -592,7 +592,10 @@ static PyObject * PythonQtClassWrapper_repr(PyObject * obj)
 
 */
 
-PyTypeObject PythonQtClassWrapper_Type = {
+PyTypeObject PythonQtClassWrapper_Type = {};
+void createPythonQtClassWrapper_Type() {
+  PythonQtClassWrapper_Type.~PyTypeObject();
+  new(&PythonQtClassWrapper_Type) PyTypeObject{
     PyVarObject_HEAD_INIT(NULL, 0)
     "PythonQt.PythonQtClassWrapper",             /*tp_name*/
     sizeof(PythonQtClassWrapper),             /*tp_basicsize*/
@@ -636,7 +639,8 @@ PyTypeObject PythonQtClassWrapper_Type = {
     PythonQtClassWrapper_alloc,                         /* tp_alloc */
     0,                         /* tp_new */
     0,                         /* tp_free */
-};
+  };
+}
 
 //-------------------------------------------------------
 

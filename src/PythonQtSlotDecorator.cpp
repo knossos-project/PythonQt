@@ -125,7 +125,10 @@ PyObject* PythonQtSlotDecorator_call(PyObject* object, PyObject* args, PyObject*
 PyDoc_STRVAR(PythonQtSlotDecorator_doc,
   "Slot(*types, result=type) -> Slot\n");
 
-PyTypeObject PythonQtSlotDecorator_Type = {
+PyTypeObject PythonQtSlotDecorator_Type = {};
+void createPythonQtSlotDecorator_Type() {
+  PythonQtSlotDecorator_Type.~PyTypeObject();
+  new(&PythonQtSlotDecorator_Type) PyTypeObject{
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     "PythonQt.QtCore.Slot",     /*tp_name*/
     sizeof(PythonQtSlotDecorator),/*tp_basicsize*/
@@ -172,4 +175,5 @@ PyTypeObject PythonQtSlotDecorator_Type = {
     0,                          /*tp_subclasses */
     0,                          /*tp_weaklist */
     0,                          /*tp_del */
-};
+  };
+}

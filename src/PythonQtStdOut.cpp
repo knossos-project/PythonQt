@@ -128,7 +128,10 @@ static PyMemberDef PythonQtStdOutRedirect_members[] = {
   {NULL}  /* Sentinel */
 };
 
-PyTypeObject PythonQtStdOutRedirectType = {
+PyTypeObject PythonQtStdOutRedirectType = {};
+void createPythonQtStdOutRedirectType() {
+  PythonQtStdOutRedirectType.~PyTypeObject();
+  new(&PythonQtStdOutRedirectType) PyTypeObject{
     PyVarObject_HEAD_INIT(NULL, 0)
     "PythonQtStdOutRedirect",             /*tp_name*/
     sizeof(PythonQtStdOutRedirect),             /*tp_basicsize*/
@@ -167,4 +170,5 @@ PyTypeObject PythonQtStdOutRedirectType = {
     0,                         /* tp_init */
     0,                         /* tp_alloc */
     PythonQtStdOutRedirect_new,                 /* tp_new */
-};
+  };
+}

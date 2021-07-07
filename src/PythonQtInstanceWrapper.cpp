@@ -898,7 +898,10 @@ static PyNumberMethods PythonQtInstanceWrapper_as_number = {
 #endif
 };
 
-PyTypeObject PythonQtInstanceWrapper_Type = {
+PyTypeObject PythonQtInstanceWrapper_Type = {};
+void createPythonQtInstanceWrapper_Type() {
+  PythonQtInstanceWrapper_Type.~PyTypeObject();
+  new (&PythonQtInstanceWrapper_Type) PyTypeObject{
     PyVarObject_HEAD_INIT(&PythonQtClassWrapper_Type, 0)
     "PythonQt.PythonQtInstanceWrapper",             /*tp_name*/
     sizeof(PythonQtInstanceWrapper),             /*tp_basicsize*/
@@ -945,7 +948,8 @@ PyTypeObject PythonQtInstanceWrapper_Type = {
     (initproc)PythonQtInstanceWrapper_init,      /* tp_init */
     0,                         /* tp_alloc */
     PythonQtInstanceWrapper_new,                 /* tp_new */
-};
+  };
+}
 
 //-------------------------------------------------------
 
