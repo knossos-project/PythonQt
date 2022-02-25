@@ -129,7 +129,7 @@ endif()
 add_subdirectory(src)
 set(optpy "libpython${python_major}${python_minor}.dl.a")
 install(FILES ${PROJECT_BINARY_DIR}/${optpy} DESTINATION lib)
-target_link_libraries(${PythonQt} PUBLIC $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/lib/libpython${python_major}${python_minor}.dl.a>)
+target_link_libraries(${PythonQt} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/libpython${python_major}${python_minor}.dl.a>$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/lib/libpython${python_major}${python_minor}.dl.a>)
 #-----------------------------------------------------------------------------
 # Extenseions (QtAll)
 if (${PythonQtAll})
