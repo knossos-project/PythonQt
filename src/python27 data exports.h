@@ -2,15 +2,22 @@
 
 #include <libloaderapi.h>
 
+#include <QDebug>
+
 static auto pythonDll = [](){
     static auto pythonDll = GetModuleHandle("python27.dll");
     if (pythonDll == nullptr) {
         throw 1;
     }
+    qDebug() << "pythonDll" << pythonDll;
     return pythonDll;
 };
+static auto GetProcAddress2 = [](auto name){
+    qDebug() << pythonDll() << name << reinterpret_cast<std::size_t>(GetProcAddress(pythonDll(), name));
+    return GetProcAddress(pythonDll(), name);
+};
 
-#define LoadPythonSymbol(name) (*reinterpret_cast<decltype(name)*>(GetProcAddress(pythonDll(), #name)))
+#define LoadPythonSymbol(name) (*reinterpret_cast<decltype(name)*>(GetProcAddress2(#name)))
 
 #define PyBaseObject_Type LoadPythonSymbol(PyBaseObject_Type)
 #define PyBaseString_Type LoadPythonSymbol(PyBaseString_Type)
