@@ -176,3 +176,7 @@ static auto GetProcAddress2 = [](auto name){
 #define _Py_ctype_table LoadPythonSymbol(_Py_ctype_table)
 #define _Py_ctype_tolower LoadPythonSymbol(_Py_ctype_tolower)
 #define _Py_ctype_toupper LoadPythonSymbol(_Py_ctype_toupper)
+
+// singular non-data symbol as workaround
+// because it only creates 0.0 when called via delay load helper
+#define PyFloat_FromDouble LoadPythonSymbol(PyFloat_FromDouble)
