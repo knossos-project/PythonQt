@@ -123,6 +123,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     add_compile_options("-fdiagnostics-color=always")
 endif()
+# reduce spam
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations -Wno-register -Wno-write-strings")
 
 #-----------------------------------------------------------------------------
 # Core
