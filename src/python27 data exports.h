@@ -9,11 +9,11 @@ static auto pythonDll = [](){
     if (pythonDll == nullptr) {
         throw 1;
     }
-    qDebug() << "pythonDll" << pythonDll;
+//    qDebug() << "pythonDll" << pythonDll;
     return pythonDll;
 };
 static auto GetProcAddress2 = [](auto name){
-    qDebug() << pythonDll() << name << reinterpret_cast<std::size_t>(GetProcAddress(pythonDll(), name));
+//    qDebug() << pythonDll() << name << reinterpret_cast<std::size_t>(GetProcAddress(pythonDll(), name));
     return GetProcAddress(pythonDll(), name);
 };
 
