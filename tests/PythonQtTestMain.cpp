@@ -55,7 +55,7 @@ int main( int argc, char **argv )
   PythonQtObjectPtr main = PythonQt::self()->getMainModule();
   PythonQt::self()->addObject(main, "obj", _helper);
 
-  //PyRun_SimpleString("def testIntSignal(a):\n  if a==12: obj.setPassed();\n");
+  PyRun_SimpleString("def testIntSignal(a):\n  if a==12: obj.setPassed();\n");
   //qDebug() << PythonQt::self()->addSignalHandler(_helper, SIGNAL(intSignal(int)), main, "testIntSignal");
   //qDebug() << _helper->emitIntSignal(12);
 
