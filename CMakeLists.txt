@@ -98,9 +98,9 @@ option(PythonQt_DynamicMetaObject "Add functionality which requires Qt source co
 if(PythonQt_Python)
 	find_package(PythonLibs ${PythonQt_Python} REQUIRED EXACT)
 elseif(PythonQt_Python3)
-	find_package(PythonLibs 3.3 REQUIRED)
+	find_package(Python 3.3 REQUIRED COMPONENTS Development.Embed)
 else()
-	find_package(PythonLibs 2.6 REQUIRED)
+	find_package(Python 2.6 REQUIRED COMPONENTS Development.Embed)
 endif()
 
 if(NOT ${PYTHONLIBS_VERSION_STRING} VERSION_LESS 3)
@@ -109,15 +109,12 @@ else()
 	set(PythonQt_Python3 OFF)
 endif()
 
-include_directories(${PYTHON_INCLUDE_DIRS})
 add_definitions(-DPYTHONQT_USE_RELEASE_PYTHON_FALLBACK)
 
 #-----------------------------------------------------------------------------
 # Library Name
 # To maintain ABI compatibility, the Qt major version as well as the Python major and minor version are needed
-string(SUBSTRING ${PYTHONLIBS_VERSION_STRING} 0 1 python_major)
-string(SUBSTRING ${PYTHONLIBS_VERSION_STRING} 2 1 python_minor)
-set(PythonQt Qt${QT_VERSION_MAJOR}Python${python_major}${python_minor} CACHE INTERNAL "")
+set(PythonQt Qt${QT_VERSION_MAJOR}Python${Python_VERSION_MAJOR}${Python_VERSION_MINOR} CACHE INTERNAL "")
 
 set(CMAKE_DEBUG_POSTFIX "_d")
 
@@ -165,4 +162,4 @@ endif()
 if(${PythonQtAll})
 	set(WrapAll " + ${PythonQt_QtAll}")
 endif()
-message(STATUS "Building ${PythonQt}${WrapAll} (${QT_LINK_TYPE} Qt ${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH} (using ${generated_cpp_suffix} wrappers) + Python ${PYTHONLIBS_VERSION_STRING} | ${CMAKE_BUILD_TYPE} | ${LINK_TYPE})")
+message(STATUS "Building ${PythonQt}${WrapAll} (${QT_LINK_TYPE} Qt ${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH} (using ${generated_cpp_suffix} wrappers) + Python ${Python_VERSION} | ${CMAKE_BUILD_TYPE} | ${LINK_TYPE})")
