@@ -1,17 +1,5 @@
 #pragma once
 
-#include <libloaderapi.h>
-
-static auto pythonDll = [](){
-    static auto pythonDll = GetModuleHandle("python310.dll");
-    if (pythonDll == nullptr) {
-        throw 1;
-    }
-    return pythonDll;
-};
-
-#define LoadPythonSymbol(name) (*reinterpret_cast<decltype(name)*>(GetProcAddress(pythonDll(), #name)))
-
 #define PyAsyncGen_Type LoadPythonSymbol(PyAsyncGen_Type)
 #define PyBaseObject_Type LoadPythonSymbol(PyBaseObject_Type)
 #define PyBool_Type LoadPythonSymbol(PyBool_Type)
@@ -228,3 +216,7 @@ static auto pythonDll = [](){
 #define _Py_ctype_toupper LoadPythonSymbol(_Py_ctype_toupper)
 #define _Py_path_config LoadPythonSymbol(_Py_path_config)
 #define _Py_tracemalloc_config LoadPythonSymbol(_Py_tracemalloc_config)
+
+// singular non-data symbol as workaround
+// because it only creates 0.0 when called via delay load helper
+#define PyFloat_FromDouble LoadPythonSymbol(PyFloat_FromDouble)
