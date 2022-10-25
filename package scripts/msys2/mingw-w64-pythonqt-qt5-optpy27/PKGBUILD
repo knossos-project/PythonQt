@@ -1,0 +1,52 @@
+# Maintainer: Norbert Pfeiler <norbert.pfeiler@gmail.com>
+
+_realname=pythonqt-qt5-optpy27
+pkgname="$MINGW_PACKAGE_PREFIX-$_realname"
+pkgver=3.2+114.gbba1745
+pkgrel=1
+arch=('any')
+pkgdesc="PythonQt fork featuring Qt 5.x and Python 3.x support and improved CMake build system (static Qt5 + Python2 version)"
+license=('LGPL')
+url="https://github.com/knossos-project/PythonQt"
+makedepends=("$MINGW_PACKAGE_PREFIX-cmake"
+  "$MINGW_PACKAGE_PREFIX-gcc"
+  "$MINGW_PACKAGE_PREFIX-ninja"
+  "git")
+depends=("$MINGW_PACKAGE_PREFIX-qt5-"{base,multimedia}
+  #"$MINGW_PACKAGE_PREFIX-python2"
+  )
+conflicts=("$MINGW_PACKAGE_PREFIX-qt5-python27")
+provides=("$MINGW_PACKAGE_PREFIX-qt5-python27")
+source=(git+https://github.com/knossos-project/PythonQt.git#branch=optpy27)
+md5sums=('SKIP')
+
+pkgver() {
+  cd "PythonQt"
+  git describe --always --dirty --tags | sed 's/^v//;s/-/+/;s/-/./g'
+}
+
+build() {
+  mkdir -p "$srcdir/build-$MINGW_CHOST-$_realname"
+  cd "$srcdir/build-$MINGW_CHOST-$_realname"
+
+  gendef /C//Windows/System32/python27.dll
+  grep -v ' DATA' python27.def > python27.nodata.def
+  dlltool --input-def python27.nodata.def --output-delaylib libpython27.dl.a
+
+  cmake -G Ninja \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -DBUILD_SHARED_LIBS=TRUE \
+    -DCMAKE_INSTALL_PREFIX="$pkgdir$MINGW_PREFIX" \
+    -DPythonQt_Qt5=TRUE \
+    -DPythonQt_Python3=FALSE \
+    ../PythonQt
+  cmake --build .
+}
+
+check() {
+  cmake --build "$srcdir/build-$MINGW_CHOST-$_realname" --target tests
+}
+
+package() {
+  cmake --install "$srcdir/build-$MINGW_CHOST-$_realname"
+}
