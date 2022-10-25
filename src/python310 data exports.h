@@ -3,7 +3,7 @@
 #include <libloaderapi.h>
 
 static auto pythonDll = [](){
-    static auto pythonDll = GetModuleHandle("python39.dll");
+    static auto pythonDll = GetModuleHandle("python310.dll");
     if (pythonDll == nullptr) {
         throw 1;
     }
