@@ -1,23 +1,22 @@
 # Maintainer: Norbert Pfeiler <norbert.pfeiler@gmail.com>
 
-_realname=pythonqt-qt5-optpy27
+_pyver=310
+_realname=pythonqt-qt5-optpy$_pyver
 pkgname="$MINGW_PACKAGE_PREFIX-$_realname"
-pkgver=3.2+114.gbba1745
+pkgver=3.2+119.g32046cb
 pkgrel=1
 arch=('any')
-pkgdesc="PythonQt fork featuring Qt 5.x and Python 3.x support and improved CMake build system (static Qt5 + Python2 version)"
+pkgdesc="PythonQt fork featuring Qt 5.x and Python 3.x support and improved CMake build system (Qt5 + Python3 version)"
 license=('LGPL')
 url="https://github.com/knossos-project/PythonQt"
 makedepends=("$MINGW_PACKAGE_PREFIX-cmake"
   "$MINGW_PACKAGE_PREFIX-gcc"
   "$MINGW_PACKAGE_PREFIX-ninja"
   "git")
-depends=("$MINGW_PACKAGE_PREFIX-qt5-"{base,multimedia}
-  #"$MINGW_PACKAGE_PREFIX-python2"
-  )
-conflicts=("$MINGW_PACKAGE_PREFIX-qt5-python27")
-provides=("$MINGW_PACKAGE_PREFIX-qt5-python27")
-source=(git+https://github.com/knossos-project/PythonQt.git#branch=optpy27)
+depends=("$MINGW_PACKAGE_PREFIX-qt5-"{base,multimedia})
+conflicts=("$MINGW_PACKAGE_PREFIX-qt5-python$_pyver")
+provides=("$MINGW_PACKAGE_PREFIX-qt5-python$_pyver")
+source=(git+https://github.com/knossos-project/PythonQt.git#branch=optpy$_pyver)
 md5sums=('SKIP')
 
 pkgver() {
@@ -29,16 +28,20 @@ build() {
   mkdir -p "$srcdir/build-$MINGW_CHOST-$_realname"
   cd "$srcdir/build-$MINGW_CHOST-$_realname"
 
-  gendef /C//Windows/System32/python27.dll
-  grep -v ' DATA' python27.def > python27.nodata.def
-  dlltool --input-def python27.nodata.def --output-delaylib libpython27.dl.a
+  dll=/c/Users/niemand/AppData/Local/Programs/Python/Python$_pyver/python$_pyver.dll
+  gendef $dll
+  grep -v ' DATA' python$_pyver.def > python$_pyver.nodata.def
+  dlltool --input-def python$_pyver.nodata.def --output-delaylib libpython$_pyver.dl.a
+
+  cp -v $dll tests
 
   cmake -G Ninja \
     -DCMAKE_BUILD_TYPE=RELEASE \
     -DBUILD_SHARED_LIBS=TRUE \
     -DCMAKE_INSTALL_PREFIX="$pkgdir$MINGW_PREFIX" \
     -DPythonQt_Qt5=TRUE \
-    -DPythonQt_Python3=FALSE \
+    -DPythonQt_Python3=TRUE \
+    -DPythonQt_Python=3.10 \
     ../PythonQt
   cmake --build .
 }
