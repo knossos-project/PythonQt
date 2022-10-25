@@ -6,8 +6,9 @@
 
 #include <QDebug>
 
-//#define optpy python27
-#define optpy python310
+#ifndef optpy
+  #define optpy python310
+#endif
 
 static auto pythonDll = [](){
     static auto pythonDll = GetModuleHandle(BOOST_PP_STRINGIZE(optpy.dll));
