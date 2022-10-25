@@ -128,10 +128,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations -Wno-regist
 
 #-----------------------------------------------------------------------------
 # Core
+set(optpy "libpython${Python_VERSION_MAJOR}${Python_VERSION_MINOR}.dl.a" CACHE STRING "")
 add_subdirectory(src)
-set(optpy "libpython${Python_VERSION_MAJOR}${Python_VERSION_MINOR}.dl.a")
-install(FILES ${PROJECT_BINARY_DIR}/${optpy} DESTINATION lib)
-target_link_libraries(${PythonQt} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/libpython${Python_VERSION_MAJOR}${Python_VERSION_MINOR}.dl.a>$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/lib/libpython${Python_VERSION_MAJOR}${Python_VERSION_MINOR}.dl.a>)
 #-----------------------------------------------------------------------------
 # Extenseions (QtAll)
 if (${PythonQtAll})
