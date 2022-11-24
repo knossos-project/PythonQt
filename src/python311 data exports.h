@@ -1,5 +1,9 @@
 #pragma once
 
+// singular non-data symbol as workaround
+// because it only creates 0.0 when called via delay load helper
+#define PyFloat_FromDouble LoadPythonSymbol(PyFloat_FromDouble)
+
 #define PyAsyncGen_Type LoadPythonSymbol(PyAsyncGen_Type)
 #define PyBaseObject_Type LoadPythonSymbol(PyBaseObject_Type)
 #define PyBool_Type LoadPythonSymbol(PyBool_Type)
