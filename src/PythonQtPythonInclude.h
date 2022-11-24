@@ -44,6 +44,8 @@
 #define PYTHONQT_RESTORE_KEYWORDS
 #endif
 
+#define PY_SSIZE_T_CLEAN
+
 // If PYTHONQT_USE_RELEASE_PYTHON_FALLBACK is enabled, try to link
 // release Python DLL if it is available by undefining _DEBUG while
 // including Python.h
