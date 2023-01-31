@@ -1,0 +1,5 @@
+src/
+pkg/
+PythonQt/
+*.pkg.tar.*
+qmetaobjectbuilder_p.h
