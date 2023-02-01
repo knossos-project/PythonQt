@@ -129,8 +129,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations -Wno-regist
 #-----------------------------------------------------------------------------
 # Core
 set(optpy "libpython${Python_VERSION_MAJOR}${Python_VERSION_MINOR}.dl.a" CACHE STRING "")
-# python headers are moot
-add_compile_definitions($<$<AND:$<PLATFORM_ID:Windows>,$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>>:MS_WIN64>)
 add_subdirectory(src)
 #-----------------------------------------------------------------------------
 # Extenseions (QtAll)
