@@ -56,7 +56,7 @@ class PYTHONQT_EXPORT PythonQtScriptingConsole : public QTextEdit
   Q_OBJECT
 
 public:
-  PythonQtScriptingConsole(QWidget* parent, const PythonQtObjectPtr& context, Qt::WindowFlags i = 0);
+  PythonQtScriptingConsole(QWidget* parent, const PythonQtObjectPtr& context, Qt::WindowFlags i = {});
 
   ~PythonQtScriptingConsole() override;
 
