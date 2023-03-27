@@ -5,6 +5,8 @@ function(qt_use_modules target)
 	foreach(arg IN LISTS ARGN)
 		find_package(Qt5 COMPONENTS ${arg})
 		target_link_libraries(${target} PUBLIC Qt::${arg})
+		string(TOUPPER ${arg} bigarg)
+		target_compile_definitions(${target} PRIVATE PYTHONQT_WITH_${bigarg})
 	endforeach()
 endfunction()
 
