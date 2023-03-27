@@ -30,7 +30,7 @@ add_library(${PythonQt} ${SOURCES} ${GEN_MOC} ${GEN_QRC} ${HEADERS})
 if(PythonQt_DynamicMetaObject)
 	target_compile_definitions(${PythonQt} PRIVATE DYNAMIC_META_OBJECT_IMPLEMENTATION)
 endif()
-target_link_libraries(${PythonQt} Python::Python)
+target_link_libraries(${PythonQt} PUBLIC Python::Python)
 target_include_directories(${PythonQt} PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 	$<INSTALL_INTERFACE:include>

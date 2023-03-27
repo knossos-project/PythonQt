@@ -17,7 +17,7 @@ endif()
 qt_wrap_cpp(GEN_HEADERS ${HEADERS})
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${GEN_HEADERS})
-target_link_libraries(${PROJECT_NAME} ${PythonQt})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${PythonQt})
 qt_use_modules(${PROJECT_NAME} Test Gui)
 if(PythonQt_Qt5)
 	qt_use_modules(${PROJECT_NAME} Widgets)
