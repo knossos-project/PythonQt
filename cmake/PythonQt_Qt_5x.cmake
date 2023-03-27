@@ -4,7 +4,7 @@ find_package(Qt5Core REQUIRED)
 function(qt_use_modules target)
 	foreach(arg IN LISTS ARGN)
 		find_package(Qt5 COMPONENTS ${arg})
-		target_link_libraries(${target} PUBLIC Qt5::${arg})
+		target_link_libraries(${target} PUBLIC Qt::${arg})
 	endforeach()
 endfunction()
 
