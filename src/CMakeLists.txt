@@ -32,7 +32,7 @@ if(PythonQt_DynamicMetaObject)
 endif()
 
 install(FILES ${CMAKE_BINARY_DIR}/${optpy} DESTINATION lib)
-target_compile_definitions(${PythonQt} PRIVATE optpy=python${Python_VERSION_MAJOR}${Python_VERSION_MINOR})
+target_compile_definitions(${PythonQt} PUBLIC optpy=python${Python_VERSION_MAJOR}${Python_VERSION_MINOR})
 target_link_libraries(${PythonQt} PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/${optpy}>$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/lib/${optpy}>)
 
 target_link_libraries(${PythonQt} PUBLIC Python::Python)
