@@ -10,17 +10,22 @@
     #error no optpy
 #endif
 
-static auto pythonDll = [](){
+static inline auto GetProcAddress2 = [](auto name){
     static auto pythonDll = GetModuleHandle(BOOST_PP_STRINGIZE(optpy.dll));
-    if (pythonDll == nullptr) {
-        throw 1;
+    if (pythonDll != nullptr) {
+        if (const auto ad = GetProcAddress(pythonDll, name)) {
+            return ad;
+        } else {
+            qDebug() << "GetProcAddress failed for" << name << "via" << pythonDll << "for" << BOOST_PP_STRINGIZE(optpy.dll);
+            throw std::runtime_error(name);
+        }
+    } else {
+        qDebug() << name << "invalid pythonDll" << BOOST_PP_STRINGIZE(optpy.dll);
+        pythonDll = GetModuleHandle(BOOST_PP_STRINGIZE(optpy.dll));
+        qDebug() << name << "pythonDll" << pythonDll;
+        throw std::runtime_error(name + std::to_string(reinterpret_cast<std::size_t>(pythonDll)));
     }
-    //qDebug() << "pythonDll" << pythonDll;
-    return pythonDll;
-};
-static auto GetProcAddress2 = [](auto name){
-    //qDebug() << pythonDll() << name << reinterpret_cast<std::size_t>(GetProcAddress(pythonDll(), name));
-    return GetProcAddress(pythonDll(), name);
+    qDebug() << "nonono";
 };
 
 #define LoadPythonSymbol(name) (*reinterpret_cast<decltype(name)*>(GetProcAddress2(#name)))
