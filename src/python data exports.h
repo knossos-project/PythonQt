@@ -7,7 +7,7 @@
 #include <QDebug>
 
 #ifndef optpy
-  #define optpy python310
+    #error no optpy
 #endif
 
 static auto pythonDll = [](){
